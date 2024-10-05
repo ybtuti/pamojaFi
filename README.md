@@ -2,7 +2,7 @@
 
 ---
 
-### **PamojaFi** is a decentralized platform designed to help farmers access resources, funding, and support to enhance agricultural productivity. With **DAO-like features**, PamojaFi empowers the community to actively participate in governance, resource allocation, and decision-making processes, ensuring transparency, fairness, and user-driven development.
+**PamojaFi** is a decentralized platform designed to help farmers access resources, funding, and support to enhance agricultural productivity. With **DAO-like features, PamojaFi empowers the community to actively participate in governance, resource allocation, and decision-making processes, ensuring transparency, fairness, and user-driven development.
 
 ---
 
