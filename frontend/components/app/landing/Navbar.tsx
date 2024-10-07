@@ -64,7 +64,7 @@ function Navbar() {
           <DrawerTrigger>
             <IoMenu className="text-xl" size={44} />
           </DrawerTrigger>
-          <DrawerContent className="bg-white">
+          <DrawerContent className="bg-hero">
             <DrawerHeader>
               <DrawerTitle>
                 <div className="mx-2">

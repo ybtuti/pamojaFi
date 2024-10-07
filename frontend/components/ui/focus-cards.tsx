@@ -27,7 +27,7 @@ export const Card = React.memo(
         src={card.src}
         alt={card.title}
         fill
-        className="md:object-cover object-contain absolute inset-0"
+        className="md:object-cover object-fill absolute inset-0"
       />
       <div
         className={cn(
