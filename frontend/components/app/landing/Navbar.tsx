@@ -21,9 +21,9 @@ import { TiGroup } from "react-icons/ti";
 
 function Navbar() {
   return (
-    <div className="flex justify-between items-center max-w-[1190px] mx-auto my-0 py-8 bg-hero">
+    <div className="flex justify-between items-center max-w-[1190px] mx-auto my-0 py-8">
       <Link to="/" className="mx-2">
-        <h1 className="text-2xl font-extrabold text-gray-700 logo ">
+        <h1 className="text-2xl font-extrabold text-benefits logo ">
           pamojaFI.
         </h1>
       </Link>
