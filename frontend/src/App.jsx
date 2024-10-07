@@ -8,7 +8,7 @@ import ProjectView from "../pages/ProjectView";
 
 function App() {
   return (
-    <div className="max-w-[1190px] mx-auto my-0 py-8">
+    <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
