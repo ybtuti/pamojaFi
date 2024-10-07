@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { client } from "../../../src/clent";
+import { ConnectButton } from "thirdweb/react";
 
 function Navbar() {
   return (
@@ -38,8 +40,8 @@ function Navbar() {
           Community
         </Link>
       </div>
-      <div>
-        <button className="text-red-500 text-sm title">Connect wallet</button>
+      <div className="logo">
+        <ConnectButton client={client} />
       </div>
     </div>
   );
