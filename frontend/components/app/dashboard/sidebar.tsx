@@ -111,7 +111,7 @@ const Dashboard = ({
   } else if (dashboardContent === "marketplace") {
     return <Market />;
   } else if (dashboardContent === "forums") {
-    <Forums />;
+    return <Forums />;
   } else if (dashboardContent === "resources") {
     return <Resources />;
   } else {
