@@ -20,30 +20,22 @@ export function DashboardSidebar() {
     {
       label: "Proposals",
       href: "#",
-      icon: (
-        <IconPresentationFilled className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
+      icon: <IconPresentationFilled className="h-5 w-5 flex-shrink-0" />,
     },
     {
       label: "Marketplace",
       href: "#",
-      icon: (
-        <IconBuildingStore className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
+      icon: <IconBuildingStore className="h-5 w-5 flex-shrink-0" />,
     },
     {
       label: "Forums",
       href: "#",
-      icon: (
-        <IconMessageFilled className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
+      icon: <IconMessageFilled className="h-5 w-5 flex-shrink-0" />,
     },
     {
       label: "Resource Center",
       href: "#",
-      icon: (
-        <IconBooks className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
+      icon: <IconBooks className="h-5 w-5 flex-shrink-0" />,
     },
     {
       label: "Analytics",
