@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { client } from "../../../src/clent";
 import { ConnectButton } from "thirdweb/react";
 import { IoMenu } from "react-icons/io5";
@@ -20,6 +20,9 @@ import { IoIosCreate } from "react-icons/io";
 import { TiGroup } from "react-icons/ti";
 
 function Navbar() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+  console.log(currentPath);
   return (
     <div className="flex justify-between items-center max-w-[1190px] mx-auto my-0 py-8">
       <Link to="/" className="mx-2">
@@ -30,28 +33,40 @@ function Navbar() {
       <div className="hidden md:flex items-center justify-between text-gray-700 title gap-2">
         <Link
           to="/dashboard"
-          className="text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150"
+          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
+            currentPath === "/dashboard"
+              ? "border-b-[2px]  border-benefits"
+              : ""
+          }`}
         >
           Dashboard
         </Link>
 
         <Link
           to="/create"
-          className="text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150"
+          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
+            currentPath === "/create" ? "border-b-[2px]  border-benefits" : ""
+          }`}
         >
           Create
         </Link>
 
         <Link
           to="/pending"
-          className="text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150"
+          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
+            currentPath === "/pending" ? "border-b-[2px]  border-benefits" : ""
+          }`}
         >
           Pending
         </Link>
 
         <Link
           to="/community"
-          className="text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150"
+          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
+            currentPath === "/community"
+              ? "border-b-[2px]  border-benefits"
+              : ""
+          }`}
         >
           Community
         </Link>
