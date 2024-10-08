@@ -29,7 +29,7 @@ function Proposals() {
           </div>
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          {activeProposals.slice(0, 4).map((proposal) => (
+          {activeProposals.map((proposal) => (
             <ActiveCard proposal={proposal} key={proposal.id} />
           ))}
         </div>
