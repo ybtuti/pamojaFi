@@ -9,7 +9,7 @@ import {
 
 function ActiveCard({ proposal }: { proposal: Proposal }) {
   return (
-    <div className="shadow rounded-md hover:scale-95 ease-in-out duration-500 cursor-pointer p-2">
+    <div className="shadow rounded-md hover:scale-95 ease-in-out duration-500 cursor-pointer p-2 my-4 md:my-2">
       <div>
         <LazyLoadImage
           src={proposal.headerImageLink}
