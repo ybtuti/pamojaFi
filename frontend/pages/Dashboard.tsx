@@ -1,11 +1,14 @@
 import React from "react";
 import Navbar from "../components/app/landing/Navbar";
+import { DashboardSidebar } from "../components/app/dashboard/sidebar";
 
 function Dashboard() {
   return (
-    <div>
+    <div className="">
       <Navbar />
-      <h1>Dashboard</h1>
+      <div className="w-full">
+        <DashboardSidebar />
+      </div>
     </div>
   );
 }
