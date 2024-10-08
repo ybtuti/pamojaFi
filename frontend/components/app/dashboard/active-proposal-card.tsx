@@ -18,8 +18,8 @@ function ActiveCard({ proposal }: { proposal: Proposal }) {
         />
       </div>
       <div className="flex flex-col gap-2 my-2 mb-4">
-        <div className="flex items-center justify-between mx-2">
-          <h1 className="logo text-[#000] font-semibold text-lg pt-2">
+        <div className="flex items-center justify-between mx-2 mt-2">
+          <h1 className="logo text-[#000] font-semibold text-lg">
             {proposal.name}
           </h1>
           <div className="flex gap-1">

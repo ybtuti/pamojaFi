@@ -6,7 +6,7 @@ import { Button } from "../../ui/button";
 function Proposals() {
   const [onViewProposals, setOnViewProposals] = React.useState([]);
   return (
-    <div className="p-2 md:p-10 md:rounded-tl-2xl border border-benefits flex flex-col gap-2 flex-1 w-full h-full mb-16">
+    <div className="p-2 md:p-10 md:rounded-tl-2xl border border-benefits flex flex-col gap-2 flex-1 w-full h-full">
       <div>
         <div className="flex items-center md:justify-between gap-4 my-2">
           <h1 className="text-lg logo hidden md:flex">Categories</h1>
@@ -34,9 +34,9 @@ function Proposals() {
           ))}
         </div>
       </div>
-      <div className="w-full items-center justify-center my-4">
+      {/* <div className="w-full items-center justify-center my-4">
         <Button className="bg-benefits text-hero title">Load More</Button>
-      </div>
+      </div> */}
     </div>
   );
 }
