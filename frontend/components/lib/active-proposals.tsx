@@ -13,6 +13,7 @@ export interface Proposal {
   moreDetails: string;
   active: boolean;
   authorNamespace: string;
+  votes: number;
 }
 
 const activeProposals: Proposal[] = [
@@ -36,6 +37,7 @@ const activeProposals: Proposal[] = [
     category: "Livestock",
     moreDetails:
       "The team behind this proposal are two students from Dedan Kimathi University. One pursuing a degree in Computer Science and the other in Tourism. They have a passion for cooking and have been bootstrapping the business for the last 5 years using their educational loans.",
+    votes: 86,
   },
   {
     id: 2,
@@ -57,6 +59,7 @@ const activeProposals: Proposal[] = [
     category: "Crop Production",
     moreDetails:
       "The team is committed to sustainable farming practices and aims to engage the local community in healthy eating habits through their organic produce.",
+    votes: 55,
   },
   {
     id: 3,
@@ -78,6 +81,7 @@ const activeProposals: Proposal[] = [
     category: "Fish Farming",
     moreDetails:
       "The project will provide jobs in the community and ensure a steady supply of quality fish to local markets.",
+    votes: 77,
   },
   {
     id: 4,
@@ -99,6 +103,7 @@ const activeProposals: Proposal[] = [
     category: "Other",
     moreDetails:
       "The greenhouse will utilize renewable energy to reduce costs and environmental impact, providing fresh produce year-round.",
+    votes: 95,
   },
   {
     id: 5,
@@ -115,10 +120,12 @@ const activeProposals: Proposal[] = [
       "https://facebook.com/LivestockFeedProduction",
       "https://livestockfeed.com",
     ],
-    headerImageLink: "",
+    headerImageLink:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC4u1WEzSu8japGW1KCiSUHscoqojvfdL3Mg&s",
     category: "Livestock",
     moreDetails:
       "This initiative will enhance local livestock production and contribute to the overall economy of the community.",
+    votes: 100,
   },
   {
     id: 6,
@@ -140,6 +147,7 @@ const activeProposals: Proposal[] = [
     category: "Other",
     moreDetails:
       "The project aims to create a sustainable farming model that benefits the environment and improves farmers' livelihoods.",
+    votes: 88,
   },
   {
     id: 7,
@@ -161,6 +169,7 @@ const activeProposals: Proposal[] = [
     category: "Crop Production",
     moreDetails:
       "The initiative will provide access to natural remedies and promote awareness of the benefits of herbal medicine.",
+    votes: 75,
   },
 ];
 
