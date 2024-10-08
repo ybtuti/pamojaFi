@@ -65,7 +65,7 @@ export function DashboardSidebar() {
     <div className="flex items-center justify-center w-full">
       <div
         className={cn(
-          "rounded-md flex flex-col md:flex-row  w-[100%] flex-1 max-w-[96rem] overflow-hidden",
+          "rounded-md flex flex-col md:flex-row  w-[100%] flex-1 max-w-[102rem] overflow-hidden",
           "h-screen" // for your use case, use `h-screen` instead of `h-[60vh]`
         )}
       >
