@@ -105,6 +105,9 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     /// @param isActive The new status of the pool (true for active, false for inactive).
     event PoolStatusChanged(bool isActive);
 
+    /// @dev Mapping to track funded users
+    mapping(address => bool) private s_fundedUsers;
+
     /// @dev Constructor to initialize the PamojaFi contract.
     /// @param priceFeedAddress The address of the price feed contract.
     constructor(
@@ -123,15 +126,13 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
     /// @dev Function to fund multiple users with a single transaction.
     /// @param userAddresses Array of user addresses to be funded.
-    /// @param priceUpdate Array of price update data from Pyth.
     function fund(
-        address[] calldata userAddresses,
-        bytes[] calldata priceUpdate // Remove priceUpdate as it's not needed for Chainlink
+        address[] calldata userAddresses
     ) public payable nonReentrant {
         uint256 numUsers = userAddresses.length;
         if (numUsers == 0) revert PamojaFi__NoUsersProvided();
 
-        uint256 totalDeposits = msg.value; // Use msg.value directly
+        uint256 totalDeposits = msg.value;
         if (totalDeposits == 0) revert PamojaFi__TotalDepositTooLow();
 
         uint256 depositPerUser = totalDeposits / numUsers;
@@ -141,6 +142,7 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
         for (uint256 i = 0; i < numUsers; ++i) {
             s_userBalances[userAddresses[i]] += depositPerUser;
+            s_fundedUsers[userAddresses[i]] = true; // Mark user as funded
         }
 
         s_totalFundedUSD[tokenId] += totalDeposits;
@@ -148,14 +150,14 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         emit Funded(_msgSender(), totalDeposits, tokenId);
     }
 
-    /// @dev Function to fund the pool.
-    /// @param priceUpdate Array of price update data from Pyth.
-    function poolFunds(
-        bytes[] calldata priceUpdate
-    ) public payable nonReentrant {
+    /*
+     * @dev Function to fund the pool.
+     */
+
+    function poolFunds() public payable nonReentrant {
         if (!s_isPoolActive) revert PamojaFi__PoolNotActive();
 
-        uint256 basePrice = _updatePythPriceFeeds(priceUpdate);
+        uint256 basePrice = _getLatestPrice();
         uint256 totalDeposits = msg.value;
 
         s_poolBalance += totalDeposits;
@@ -317,12 +319,19 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         return s_isPoolActive;
     }
 
-    function getPythContractAddress() public view returns (address) {
-        return address(s_pyth);
+    function getPriceFeedAddress() public view returns (address) {
+        return address(s_priceFeed);
     }
 
-    function getPriceFeedId() public view returns (bytes32) {
-        return s_priceFeedId;
+    // function getPriceFeedId() public view returns (bytes32) {
+    //     return s_priceFeedId;
+    // }
+
+    function _getLatestPrice() private view returns (uint256) {
+        (, int256 price, , uint256 updatedAt, ) = s_priceFeed.latestRoundData();
+        require(price > 0, "Invalid price");
+        require(block.timestamp - updatedAt <= 3600, "Stale price");
+        return uint256(price);
     }
 
     /// @dev Function to calculate the scaled amount in Wei for 1 USD.
@@ -348,17 +357,41 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     //     // This function is no longer needed; remove it or refactor as necessary
     // }
 
-    /// @dev Overridden withdraw function to disable funders from withdrawing funds.
+    /// @dev Allows users who have been funded to withdraw their funds.
     /// @param assets The amount of assets to withdraw.
     /// @param receiver The address to receive the withdrawn assets.
     /// @param owner The address of the token owner.
-    /// @return id Always reverts with a custom error.
+    /// @return id The token ID associated with the withdrawal.
     function withdraw(
         uint256 assets,
         address receiver,
         address owner
     ) public virtual override returns (uint256 id) {
-        revert("PamojaFi Not Allow Funders to Withdraw!");
+        // Check if the caller is the owner of the tokens
+        require(owner == _msgSender(), "Caller is not the owner");
+
+        // Check if the user has been funded
+        require(s_fundedUsers[owner], "User has not been funded");
+
+        // Check if the requested withdrawal amount is greater than zero
+        require(assets > 0, "Withdrawal amount must be greater than zero");
+
+        // Check if the owner has sufficient balance
+        uint256 userBalance = s_userBalances[owner];
+        require(userBalance >= assets, "Insufficient balance for withdrawal");
+
+        // Update the user's balance
+        s_userBalances[owner] -= assets;
+
+        // Transfer the assets to the receiver
+        (bool success, ) = receiver.call{value: assets}("");
+        require(success, "Transfer failed");
+
+        // Emit an event for the withdrawal
+        emit FundsWithdrawn(owner, assets);
+
+        // Return the token ID associated with the withdrawal
+        id = deposit(0, owner); // Assuming deposit function returns the token ID
     }
 
     /**
