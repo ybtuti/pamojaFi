@@ -3,7 +3,7 @@ import activeProposals from "../../lib/active-proposals";
 import ActiveCard from "./active-proposal-card";
 
 function Proposals() {
-  const [activeProposals, setActiveProposals] = React.useState(activeProposals);
+  const [activeProposals, setActiveProposals] = React.useState([]);
   return (
     <div className="p-2 md:p-10 md:rounded-tl-2xl border border-benefits flex flex-col gap-2 flex-1 w-full h-full mb-16">
       <div>

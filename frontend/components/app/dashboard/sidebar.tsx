@@ -23,7 +23,7 @@ import Analytics from "./analytics";
 
 export function DashboardSidebar() {
   const [dashboardContent, setDashboardContent] = useState<string | undefined>(
-    "dashboard"
+    "proposals"
   );
 
   const links = [
