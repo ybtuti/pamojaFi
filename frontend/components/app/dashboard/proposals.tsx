@@ -1,9 +1,10 @@
 import React from "react";
 import activeProposals from "../../lib/active-proposals";
 import ActiveCard from "./active-proposal-card";
+import { Button } from "../../ui/button";
 
 function Proposals() {
-  const [activeProposals, setActiveProposals] = React.useState([]);
+  const [onViewProposals, setOnViewProposals] = React.useState([]);
   return (
     <div className="p-2 md:p-10 md:rounded-tl-2xl border border-benefits flex flex-col gap-2 flex-1 w-full h-full mb-16">
       <div>
@@ -32,6 +33,9 @@ function Proposals() {
             <ActiveCard proposal={proposal} key={proposal.id} />
           ))}
         </div>
+      </div>
+      <div className="w-full items-center justify-center my-4">
+        <Button className="bg-benefits text-hero title">Load More</Button>
       </div>
     </div>
   );
