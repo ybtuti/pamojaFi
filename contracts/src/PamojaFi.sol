@@ -1,58 +1,47 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.20;
 
 import {ERC4626C, IERC4626C} from "src/ERC4626C.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+//import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface, OracleLib} from "./libraries/OracleLib.sol";
 
-/// @dev Custom error for invalid address input.
-error PamojaFi__InvalidAddress();
-
-/// @dev Custom error for when no user addresses are provided.
-error PamojaFi__NoUsersProvided();
-
-/// @dev Custom error for when the total deposit is too low.
-error PamojaFi__TotalDepositTooLow();
-
-/// @dev Custom error for when the deposit per user is too low.
-error PamojaFi__DepositPerUserTooLow();
-
-/// @dev Custom error for when a user has no active proposal.
-error PamojaFi__UserHasNoActiveProposal();
-
-/// @dev Custom error for when the pool is not active.
-error PamojaFi__PoolNotActive();
-
-/// @dev Custom error for when the deposit amount is too low.
-error PamojaFi__DepositAmountTooLow();
-
-/// @dev Custom error for invalid random number generation.
-error PamojaFi__InvalidRandomNumber();
-
-/// @dev Custom error for when the pool funds are zero.
-error PamojaFi__PoolFundsZero();
-
-/// @dev Custom error for when the fee is too low.
-error PamojaFi__FeeTooLow();
-
-/// @dev Custom error for insufficient funds.
-error PamojaFi__InsufficientFunds();
-
-/// @dev Custom error for transfer failure.
-error PamojaFi__TransferFailed();
-
-/// @dev Custom error for when the price feed data is stale.
-error PamojaFi__StalePrice();
-
-/// @title PamojaFi
-/// @dev Contract extending ERC4626C with additional asset management and pooling functionalities.
 /**
- * @title
- * @author Original author chandrabosep
- * @notice
+ * @title PamojaFi
+ * @author ybtuti
+ * @notice PamojaFi is a contract that allows users to fund a pool and withdraw their funds.
  */
 contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
+    // ===============================
+    //          Errors
+    // ===============================
+
+    error PamojaFi__InvalidAddress();
+    error PamojaFi__NoUsersProvided();
+    error PamojaFi__TotalDepositTooLow();
+    error PamojaFi__DepositPerUserTooLow();
+    error PamojaFi__UserHasNoActiveProposal();
+    error PamojaFi__PoolNotActive();
+    error PamojaFi__DepositAmountTooLow();
+    error PamojaFi__InvalidRandomNumber();
+    error PamojaFi__PoolFundsZero();
+    error PamojaFi__FeeTooLow();
+    error PamojaFi__InsufficientFunds();
+    error PamojaFi__TransferFailed();
+    error PamojaFi__StalePrice();
+
+    /// @title PamojaFi
+    /// @dev Contract extending ERC4626C with additional asset management and pooling functionalities.
+    // ===============================
+    //          Types
+    // ===============================
+    using OracleLib for AggregatorV3Interface;
+
+    // ===============================
+    //          State Variables
+    // ===============================
     /// @dev Mapping to store the funds of each user.
     mapping(address => uint256) private s_userBalances;
 
@@ -328,7 +317,8 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     // }
 
     function _getLatestPrice() private view returns (uint256) {
-        (, int256 price, , uint256 updatedAt, ) = s_priceFeed.latestRoundData();
+        (, int256 price, , uint256 updatedAt, ) = s_priceFeed
+            .staleCheckLatestRoundData();
         require(price > 0, "Invalid price");
         require(block.timestamp - updatedAt <= 3600, "Stale price");
         return uint256(price);
@@ -337,7 +327,7 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     /// @dev Function to calculate the scaled amount in Wei for 1 USD.
     /// @return oneDollarInWei The equivalent of 1 USD in Wei.
     function getScaledAmount() public view returns (uint256 oneDollarInWei) {
-        (, int256 price, , , ) = s_priceFeed.latestRoundData(); // Use Chainlink price feed
+        (, int256 price, , , ) = s_priceFeed.staleCheckLatestRoundData(); // Use Chainlink price feed
         require(price > 0, "Invalid price");
 
         // Convert the price to 18 decimal places (Chainlink typically uses 8 decimals for ETH/USD)
@@ -425,8 +415,9 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     }
 
     function _poolFunds() public payable nonReentrant {
-        if (!s_isPoolActive) revert PamojaFi__PoolNotActive();
-
+        if (!s_isPoolActive) {
+            revert PamojaFi__PoolNotActive();
+        }
         uint256 totalDeposits = msg.value;
 
         s_poolBalance += totalDeposits;
