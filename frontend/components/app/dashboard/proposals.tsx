@@ -28,7 +28,7 @@ function Proposals() {
             </button>
           </div>
         </div>
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
           {activeProposals.map((proposal) => (
             <ActiveCard proposal={proposal} key={proposal.id} />
           ))}

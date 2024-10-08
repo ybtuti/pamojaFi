@@ -84,7 +84,7 @@ export function DashboardSidebar() {
                 ))}
               </div>
             </div>
-            <div className="absolute bottom-10">
+            <div className="">
               <SidebarLink
                 link={{
                   label: "sylus.base",
