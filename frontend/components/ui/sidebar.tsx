@@ -3,6 +3,7 @@ import Link, { LinkProps } from "next/link";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
+import { toast } from "react-toastify";
 
 interface Links {
   label: string;
@@ -181,9 +182,9 @@ export const SidebarLink = ({
         className
       )}
       {...props}
-      onClick={() =>
-        setDashboardContent && setDashboardContent(dashboardContent)
-      }
+      onClick={() => {
+        setDashboardContent && setDashboardContent(dashboardContent);
+      }}
     >
       {link.icon}
 
