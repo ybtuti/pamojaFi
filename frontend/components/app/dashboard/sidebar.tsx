@@ -13,29 +13,43 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "../../lib/utils";
+//@ts-ignore
 import logo from "../../../public/logo.jpg";
+import Proposals from "./proposals";
+import Market from "./marketplace";
+import Forums from "./forums";
+import Resources from "./resource-center";
+import Analytics from "./analytics";
 
 export function DashboardSidebar() {
+  const [dashboardContent, setDashboardContent] = useState<string | undefined>(
+    "dashboard"
+  );
+
   const links = [
     {
       label: "Proposals",
       href: "#",
       icon: <IconPresentationFilled className="h-5 w-5 flex-shrink-0" />,
+      dashboardContent: "proposals",
     },
     {
       label: "Marketplace",
       href: "#",
       icon: <IconBuildingStore className="h-5 w-5 flex-shrink-0" />,
+      dashboardContent: "marketplace",
     },
     {
       label: "Forums",
       href: "#",
       icon: <IconMessageFilled className="h-5 w-5 flex-shrink-0" />,
+      dashboardContent: "forums",
     },
     {
       label: "Resource Center",
       href: "#",
       icon: <IconBooks className="h-5 w-5 flex-shrink-0" />,
+      dashboardContent: "resources",
     },
     {
       label: "Analytics",
@@ -43,6 +57,7 @@ export function DashboardSidebar() {
       icon: (
         <IconChartPieFilled className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
+      dashboardContent: "analytics",
     },
   ];
   const [open, setOpen] = useState(false);
@@ -60,7 +75,12 @@ export function DashboardSidebar() {
               <div className="mt-8 flex flex-col gap-2">
                 <h1 className="title text-lg my-4 md:hidden">Dashboard</h1>
                 {links.map((link, idx) => (
-                  <SidebarLink key={idx} link={link} />
+                  <SidebarLink
+                    key={idx}
+                    link={link}
+                    dashboardContent={link.dashboardContent}
+                    setDashboardContent={setDashboardContent}
+                  />
                 ))}
               </div>
             </div>
@@ -75,33 +95,26 @@ export function DashboardSidebar() {
             </div>
           </SidebarBody>
         </Sidebar>
-        <Dashboard />
+        <Dashboard dashboardContent={dashboardContent} />
       </div>
     </div>
   );
 }
 
-const Dashboard = () => {
-  return (
-    <div className="flex flex-1">
-      <div className="p-2 md:p-10 md:rounded-tl-2xl border-[1px] border-neutral-200 flex flex-col gap-2 flex-1 w-full h-full">
-        <div className="flex gap-2">
-          {[...new Array(4)].map((i) => (
-            <div
-              key={"first-array" + i}
-              className="h-20 w-full rounded-lg  bg-gray-100 dark:bg-neutral-800 animate-pulse"
-            ></div>
-          ))}
-        </div>
-        <div className="flex gap-2 flex-1">
-          {[...new Array(2)].map((i) => (
-            <div
-              key={"second-array" + i}
-              className="h-full w-full rounded-lg  bg-gray-100 dark:bg-neutral-800 animate-pulse"
-            ></div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+const Dashboard = ({
+  dashboardContent,
+}: {
+  dashboardContent: string | undefined;
+}) => {
+  if (dashboardContent === undefined || dashboardContent === "proposals") {
+    return <Proposals />;
+  } else if (dashboardContent === "marketplace") {
+    return <Market />;
+  } else if (dashboardContent === "forums") {
+    <Forums />;
+  } else if (dashboardContent === "resources") {
+    return <Resources />;
+  } else {
+    return <Analytics />;
+  }
 };

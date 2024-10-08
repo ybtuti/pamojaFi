@@ -156,14 +156,23 @@ export const MobileSidebar = ({
 
 export const SidebarLink = ({
   link,
+  setDashboardContent,
+  dashboardContent,
   className,
   ...props
 }: {
   link: Links;
+  setDashboardContent?: React.Dispatch<
+    React.SetStateAction<string | undefined>
+  >;
+  dashboardContent?: string;
   className?: string;
   props?: LinkProps;
 }) => {
   const { open, animate } = useSidebar();
+  dashboardContent === undefined
+    ? (dashboardContent = "proposals")
+    : (dashboardContent = dashboardContent);
   return (
     <Link
       href={link.href}
@@ -172,6 +181,9 @@ export const SidebarLink = ({
         className
       )}
       {...props}
+      onClick={() =>
+        setDashboardContent && setDashboardContent(dashboardContent)
+      }
     >
       {link.icon}
 
