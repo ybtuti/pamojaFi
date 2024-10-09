@@ -18,6 +18,8 @@ import { MdDashboardCustomize } from "react-icons/md";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { IoIosCreate } from "react-icons/io";
 import { TiGroup } from "react-icons/ti";
+import { createWallet } from "thirdweb/wallets";
+import { base, baseSepolia, sepolia } from "thirdweb/chains";
 
 function Navbar() {
   const location = useLocation();
@@ -72,7 +74,17 @@ function Navbar() {
         </Link>
       </div>
       <div className="logo hidden md:flex">
-        <ConnectButton client={client} />
+        <ConnectButton
+          client={client}
+          wallets={[
+            createWallet("com.coinbase.wallet", {
+              walletConfig: {
+                options: "smartWalletOnly",
+              },
+              chains: [base, baseSepolia, sepolia],
+            }),
+          ]}
+        />
       </div>
       <div className="flex md:hidden mx-4">
         <Drawer>
