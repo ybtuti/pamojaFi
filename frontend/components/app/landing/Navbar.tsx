@@ -19,9 +19,32 @@ import { MdOutlinePendingActions } from "react-icons/md";
 import { IoIosCreate } from "react-icons/io";
 import { TiGroup } from "react-icons/ti";
 import { createWallet } from "thirdweb/wallets";
-import { base, baseSepolia, sepolia } from "thirdweb/chains";
+import { base as base2, baseSepolia, sepolia } from "thirdweb/chains";
+import { Avatar, Identity, Name, Address } from "@coinbase/onchainkit/identity";
+import { base } from "viem/chains";
+import { useAccount } from "wagmi";
+
+interface DisplayBasenameProps {
+  address: `0x${string}` | undefined;
+}
+
+export function Basenames({ address }: DisplayBasenameProps) {
+  return (
+    <Identity
+      address={address}
+      chain={base}
+      schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
+    >
+      <Avatar address={address} chain={base} />
+      <Name address={address} chain={base} />
+      <Address />
+    </Identity>
+  );
+}
 
 function Navbar() {
+  const { address } = useAccount();
+  const account = useAccount();
   const location = useLocation();
   const currentPath = location.pathname;
   console.log(currentPath);
@@ -81,10 +104,29 @@ function Navbar() {
               walletConfig: {
                 options: "smartWalletOnly",
               },
-              chains: [base, baseSepolia, sepolia],
+              chains: [base2, baseSepolia, sepolia],
             }),
           ]}
         />
+        {/* {!address && (
+          <ConnectButton
+            client={client}
+            wallets={[
+              createWallet("com.coinbase.wallet", {
+                walletConfig: {
+                  options: "smartWalletOnly",
+                },
+                chains: [base2, baseSepolia, sepolia],
+              }),
+            ]}
+          />
+        )}{" "} */}
+        {/* Connect wallet button
+        {account.status === "connected" && (
+          <div>
+            <Basenames address={account.address?.[0]} />
+          </div>
+        )} */}
       </div>
       <div className="flex md:hidden mx-4">
         <Drawer>
