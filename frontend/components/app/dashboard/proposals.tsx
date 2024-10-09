@@ -1,10 +1,11 @@
 import React from "react";
-import activeProposals from "../../lib/active-proposals";
+import proposals from "../../lib/active-proposals";
 import ActiveCard from "./active-proposal-card";
-import { Button } from "../../ui/button";
 
 function Proposals() {
-  const [onViewProposals, setOnViewProposals] = React.useState([]);
+  // const [onViewProposals, setOnViewProposals] = React.useState([]);
+  const activeProposals = proposals.filter((proposal) => proposal.active);
+
   return (
     <div className="p-2 md:p-10 md:rounded-tl-2xl border border-benefits flex flex-col gap-2 flex-1 w-full h-full">
       <div>
