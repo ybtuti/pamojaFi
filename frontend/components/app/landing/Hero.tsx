@@ -1,0 +1,50 @@
+import React from "react";
+import { Button } from "../../ui/button";
+import { PiUsersThreeFill } from "react-icons/pi";
+import { IoMdAdd } from "react-icons/io";
+import { HeroStats } from "./HeroStats";
+import { FcDocument } from "react-icons/fc";
+import { PiFarmFill } from "react-icons/pi";
+import { BsStars } from "react-icons/bs";
+import { PiArrowCircleUpLeftDuotone } from "react-icons/pi";
+
+function Hero() {
+  return (
+    <div className="bg-hero relative">
+      <div className="flex items-center justify-center flex-col mt-16 mb-8">
+        <h1 className="md:text-5xl text-2xl mt-16 mb-8 logo font-bold text-gray-800 md:w-[8-0%] w-full text-center text-benefits">
+          Empowering Farmers with Community-Driven Solutions One Farm at a Time
+        </h1>
+        <p className="text-lg title text-center mb-16 text-benefits">
+          Join PamojaFi to enhance agricultural productivity through
+          decentralized governance and resource allocation.
+        </p>
+        <div className="flex flex-col md:flex-row gap-2 w-[80%] items-center justify-center">
+          <Button className="font-bold title md:text-lg bg-benefits text-hero w-full md:w-[20%]">
+            Get Started
+          </Button>
+          <Button className="border-benefits text-benefits border-2 text-lg title w-full md:w-[20%]">
+            Explore
+          </Button>
+        </div>
+      </div>
+      <HeroStats />
+      <div className="hidden md:block">
+        <div className="absolute bottom-96 left-24 ">
+          <FcDocument size={44} />
+        </div>
+        <div className="absolute bottom-[28rem] left-44 ">
+          <PiFarmFill size={40} />
+        </div>
+        <div className="absolute bottom-[28rem] right-44">
+          <BsStars size={44} />
+        </div>
+        <div className="absolute bottom-96 right-24">
+          <PiArrowCircleUpLeftDuotone size={44} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Hero;
