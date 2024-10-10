@@ -1,11 +1,14 @@
 import React from "react";
 import Navbar from "../components/app/landing/Navbar";
+import LeaderBoard from "../components/app/community/leaderboard";
 
 function Community() {
   return (
     <div>
       <Navbar />
-      <h1>Community</h1>
+      <div className="max-w-7xl mx-auto my-0">
+        <LeaderBoard />
+      </div>
     </div>
   );
 }

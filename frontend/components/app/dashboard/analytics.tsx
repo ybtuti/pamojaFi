@@ -8,8 +8,8 @@ function Analytics() {
       <p className="title">Projects Analytics will be launched soon!</p>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
         {[...new Array(8)].map((i) => (
-          <div className="flex flex-col space-y-3">
-            <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+          <div className="flex flex-col space-y-3 items-center justify-center mx-1 my-4">
+            <Skeleton className="h-[200px] md:w-[250px] w-full rounded-xl" />
             <div className="space-y-2">
               <Skeleton className="h-4 w-[250px]" />
               <Skeleton className="h-4 w-[200px]" />

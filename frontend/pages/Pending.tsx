@@ -1,11 +1,12 @@
 import React from "react";
 import Navbar from "../components/app/landing/Navbar";
+import PendingProposals from "../components/app/pending/pending-proposals";
 
 function Pending() {
   return (
     <div>
       <Navbar />
-      <h1>Pending</h1>
+      <PendingProposals />
     </div>
   );
 }

@@ -22,27 +22,33 @@ function ActiveCard({ proposal }: { proposal: Proposal }) {
           <h1 className="logo text-[#000] font-semibold text-lg">
             {proposal.name}
           </h1>
-          <div className="flex gap-1">
-            <p className="text-sm logo">{proposal.votes}</p>
-            <IconHeartFilled size={20} stroke={1.5} color="#FF0000" />
-          </div>
+          {proposal.active && (
+            <div className="flex gap-1">
+              <p className="text-sm logo">{proposal.votes}</p>
+              <IconHeartFilled size={20} stroke={1.5} color="#FF0000" />
+            </div>
+          )}
         </div>
         <p className="text-sm text-benefits title leading-relaxed px-2">
           {proposal.desc}
         </p>
       </div>
-      <div className="w-full border-t-benefits border-b-benefits border-[1px] border-r-0 border-l-0 py-4 flex justify-between items-center">
-        <div className="flex px-0 gap-1 items-center">
-          <IconWallet size={20} stroke={1.5} color="#FF0000" />
-          <p className="text-sm logo">
-            {proposal.walletAddress.substring(0, 12)}...
-          </p>
+      {proposal.active && (
+        <div className="w-full border-t-benefits border-b-benefits border-[1px] border-r-0 border-l-0 py-4 flex justify-between items-center">
+          <div className="flex px-0 gap-1 items-center">
+            <IconWallet size={20} stroke={1.5} color="#FF0000" />
+            <p className="text-sm logo">
+              {proposal.walletAddress.substring(0, 12)}...
+            </p>
+          </div>
+          <div className="flex px-0 items-center">
+            <p className="text-xs logo text-center">
+              {proposal.authorNamespace}
+            </p>
+            <IconCircleCheck size={15} stroke={1.5} color="#FF0000" />
+          </div>
         </div>
-        <div className="flex px-0 items-center">
-          <p className="text-xs logo text-center">{proposal.authorNamespace}</p>
-          <IconCircleCheck size={15} stroke={1.5} color="#FF0000" />
-        </div>
-      </div>
+      )}
       <div className="w-full py-4 flex justify-between items-center">
         <div className="flex-col px-0 gap-1 items-center">
           <h1 className="text-sm font-semibold logo">TARGET</h1>

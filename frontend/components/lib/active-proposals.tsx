@@ -16,7 +16,7 @@ export interface Proposal {
   votes: number;
 }
 
-const activeProposals: Proposal[] = [
+const proposals: Proposal[] = [
   {
     id: 1,
     active: true,
@@ -63,7 +63,7 @@ const activeProposals: Proposal[] = [
   },
   {
     id: 3,
-    active: true,
+    active: false,
     authorNamespace: "mark.smith.base",
     name: "Aquaculture Innovations",
     link: "https://aquacultureinnovations.com",
@@ -107,7 +107,7 @@ const activeProposals: Proposal[] = [
   },
   {
     id: 5,
-    active: true,
+    active: false,
     authorNamespace: "tom.brown.base",
     name: "Livestock Feed Production",
     link: "https://livestockfeed.com",
@@ -151,7 +151,7 @@ const activeProposals: Proposal[] = [
   },
   {
     id: 7,
-    active: true,
+    active: false,
     authorNamespace: "peter.martin.base",
     name: "Herbal Medicine Cultivation",
     link: "https://herbalmedicines.com",
@@ -173,4 +173,4 @@ const activeProposals: Proposal[] = [
   },
 ];
 
-export default activeProposals;
+export default proposals;
