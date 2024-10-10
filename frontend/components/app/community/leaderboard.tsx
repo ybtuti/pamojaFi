@@ -14,11 +14,11 @@ function LeaderBoard() {
         </p>
       </div>
       <div className="flex flex-col md:flex-row items-center md:justify-between">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-normal">
           <button className="md:text-sm text-xs logo md:mx-4 mx-1 border-benefits border-[1px] rounded-lg py-2 md:px-4 px-2 hover:bg-benefits hover:text-hero transition-all duration-150 ">
             All
           </button>
-          <button className="text-xs logo md:mx-4 mx-3 border-benefits border-[1px] rounded-lg py-2 md:px-4 px-2 hover:bg-benefits hover:text-hero transition-all duration-150 ">
+          <button className="text-xs logo md:mx-4 mx-1 border-benefits border-[1px] rounded-lg py-2 md:px-4 px-2 hover:bg-benefits hover:text-hero transition-all duration-150 ">
             Livestock
           </button>
           <button className="text-xs logo md:mx-4 mx-1 border-benefits border-[1px] rounded-lg py-2 md:px-4 px-1 hover:bg-benefits hover:text-hero transition-all duration-150 ">
@@ -36,7 +36,7 @@ function LeaderBoard() {
             <IconList size={25} stroke={1.5} color="#FF0000" />
             <h1 className="logo text-sm">List</h1>
           </div>
-          <div className="flex bg-hero rounded-md py-2 px-2 items-center cursor-pointer">
+          <div className="flex bg-benefits text-hero rounded-md py-2 px-2 items-center cursor-pointer">
             <IconTableFilled size={25} stroke={1.5} color="#FF0000" />
             <h1 className="logo text-sm">Card</h1>
           </div>
