@@ -51,7 +51,17 @@ function CreateProposalForm() {
   }
   return (
     <div>
-      <h1>CreateProposalForm</h1>
+      <div>
+        <h1 className="my-2 logo text-3xl font-semibold text-benefits">
+          Create Proposal
+        </h1>
+        <p className="relaxed title max-w-3xl leading-relaxed my-4 text-sm">
+          Please fill in the details of your project. After submission your
+          project will be reviewed by the community members and users who
+          believe in your idea will exercise their community voting power to
+          vote for your proposal.
+        </p>
+      </div>
     </div>
   );
 }
