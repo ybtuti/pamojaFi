@@ -63,6 +63,11 @@ function LeaderBoard() {
           </div>
         </div>
       </div>
+      <div>
+        <h1 className="logo text-xl text-center text-benefits mt-8">
+          Nothing here yet.
+        </h1>
+      </div>
     </div>
   );
 }
