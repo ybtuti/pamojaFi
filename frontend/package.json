@@ -12,6 +12,8 @@
   "dependencies": {
     "@coinbase/onchainkit": "^0.33.5",
     "@coinbase/wallet-sdk": "^4.1.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@tabler/icons-react": "^3.19.0",
     "@wagmi/core": "^2.13.8",
@@ -23,6 +25,7 @@
     "process": "^0.11.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
     "react-icons": "^5.3.0",
     "react-image": "^4.1.0",
     "react-lazy-load-image-component": "^1.6.2",
@@ -30,9 +33,11 @@
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.5.3",
     "thirdweb": "^5.61.0",
+    "uuidv4": "^6.2.13",
     "vaul": "^1.0.0",
     "wagmi": "^2.12.17",
-    "web3": "^4.13.0"
+    "web3": "^4.13.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
