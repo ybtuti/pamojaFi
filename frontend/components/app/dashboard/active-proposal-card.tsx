@@ -1,6 +1,7 @@
 import React from "react";
 import { Proposal } from "../../lib/active-proposals";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useNavigate } from "react-router-dom";
 import {
   IconHeartFilled,
   IconWallet,
@@ -8,8 +9,16 @@ import {
 } from "@tabler/icons-react";
 
 function ActiveCard({ proposal }: { proposal: Proposal }) {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/proposals/${proposal.id}`);
+  };
+
   return (
-    <div className="shadow rounded-md hover:scale-95 ease-in-out duration-500 cursor-pointer p-2 my-4 md:my-2">
+    <div
+      className="shadow rounded-md hover:scale-95 ease-in-out duration-500 cursor-pointer p-2 my-4 md:my-2"
+      onClick={handleClick}
+    >
       <div>
         <LazyLoadImage
           src={proposal.headerImageLink}

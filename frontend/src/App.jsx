@@ -5,6 +5,7 @@ import CreateProposal from "../pages/CreateProposal";
 import Community from "../pages/Community";
 import Pending from "../pages/Pending";
 import ProjectView from "../pages/ProjectView";
+import ProposalDetail from "../components/app/proposal-details/Proposal";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/community" element={<Community />} />
           <Route path="/pending" element={<Pending />} />
           <Route path="/project" element={<ProjectView />} />
+          <Route path="/proposals/:id" element={<ProposalDetail />} />
         </Routes>
       </BrowserRouter>
     </div>

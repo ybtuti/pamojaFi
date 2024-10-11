@@ -10,5 +10,7 @@
     "uuidv",
     "viem",
     "Wagmi"
-  ]
+  ],
+  "zenMode.centerLayout": false,
+  "zenMode.hideActivityBar": false
 }
