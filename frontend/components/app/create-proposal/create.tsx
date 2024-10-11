@@ -15,17 +15,17 @@ import {
 import { Input } from "../../../components/ui/input";
 
 const formSchema = z.object({
-  name: z.string().min(3).max(255),
+  name: z.string(),
   projectLink: z.string().url(),
-  projectXUsername: z.string().min(3).max(100),
-  projectHeaderImageLink: z.string().url(),
+  projectXUsername: z.string(),
+  projectHeaderImageLink: z.string(),
   projectCategory: z.string(),
-  projectDescription: z.string().min(10).max(500),
-  targetAmountETH: z.string().min(0),
-  walletAddress: z.string().length(42),
-  projectTeamInformation: z.string().min(10).max(300),
-  otherLinks: z.string().min(10).max(300),
-  moreProjectDetails: z.string().min(10).max(300),
+  projectDescription: z.string(),
+  targetAmountETH: z.string(),
+  walletAddress: z.string(),
+  projectTeamInformation: z.string(),
+  otherLinks: z.string(),
+  moreProjectDetails: z.string(),
 });
 
 function CreateProposalForm() {
@@ -47,7 +47,6 @@ function CreateProposalForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Hiii");
     console.log(values);
   }
   return (
