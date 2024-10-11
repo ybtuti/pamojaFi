@@ -1,7 +1,14 @@
 import React from "react";
 import { IconList, IconTableFilled } from "@tabler/icons-react";
 
+type TDisplayStyle = "list" | "card";
+
 function LeaderBoard() {
+  const [displayStyle, setDisplayStyle] = React.useState<TDisplayStyle>("card");
+
+  const handleDisplayStyle = (style: TDisplayStyle) => {
+    setDisplayStyle(style);
+  };
   return (
     <div>
       <div className="flex flex-col gap-2 mx-2 mb-4">
@@ -32,15 +39,34 @@ function LeaderBoard() {
           </button>
         </div>
         <div className="md:flex items-center justify-between gap-2 hidden">
-          <div className="flex bg-hero rounded-md py-2 px-2 items-center cursor-pointer">
+          <div
+            className={`flex ${
+              displayStyle === "list"
+                ? "bg-benefits text-hero"
+                : "bg-hero text-benefits"
+            } rounded-md py-2 px-2 items-center cursor-pointer translate-all duration-100 ease-in-out`}
+            onClick={() => handleDisplayStyle("list")}
+          >
             <IconList size={25} stroke={1.5} color="#FF0000" />
             <h1 className="logo text-sm">List</h1>
           </div>
-          <div className="flex bg-benefits text-hero rounded-md py-2 px-2 items-center cursor-pointer">
+          <div
+            className={`flex ${
+              displayStyle === "card"
+                ? "bg-benefits text-hero "
+                : "bg-hero text-benefits"
+            } rounded-md py-2 px-2 items-center cursor-pointer translate-all duration-100 ease-in-out`}
+            onClick={() => handleDisplayStyle("card")}
+          >
             <IconTableFilled size={25} stroke={1.5} color="#FF0000" />
             <h1 className="logo text-sm">Card</h1>
           </div>
         </div>
+      </div>
+      <div>
+        <h1 className="logo text-xl text-center text-benefits mt-8">
+          Nothing here yet.
+        </h1>
       </div>
     </div>
   );
