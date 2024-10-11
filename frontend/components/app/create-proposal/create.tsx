@@ -62,6 +62,25 @@ function CreateProposalForm() {
           vote for your proposal.
         </p>
       </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Wakulima Market" {...field} />
+                </FormControl>
+                <FormDescription>Title of your project</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
     </div>
   );
 }
