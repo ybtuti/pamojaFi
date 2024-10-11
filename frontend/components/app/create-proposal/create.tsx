@@ -3,6 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/button";
+import { uuid } from "uuidv4";
 import {
   Form,
   FormControl,
@@ -47,7 +48,14 @@ function CreateProposalForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const proposal = {
+      ...values,
+      votes: 0,
+      proposers: [],
+      authorNamespace: "0x123abc45739892783618hjdghyuwe783",
+      id: uuid(),
+    };
+    console.log(proposal);
   }
   return (
     <div className="mx-4">
