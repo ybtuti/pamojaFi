@@ -21,7 +21,7 @@ const formSchema = z.object({
   projectHeaderImageLink: z.string().url(),
   projectCategory: z.string(),
   projectDescription: z.string().min(10).max(500),
-  targetAmountETH: z.number().min(0),
+  targetAmountETH: z.string().min(0),
   walletAddress: z.string().length(42),
   projectTeamInformation: z.string().min(10).max(300),
   otherLinks: z.string().min(10).max(300),
@@ -38,7 +38,7 @@ function CreateProposalForm() {
       projectHeaderImageLink: "",
       projectCategory: "",
       projectDescription: "",
-      targetAmountETH: 0,
+      targetAmountETH: "0",
       walletAddress: "",
       projectTeamInformation: "",
       otherLinks: "",
@@ -47,6 +47,7 @@ function CreateProposalForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("Hiii");
     console.log(values);
   }
   return (
@@ -148,7 +149,7 @@ function CreateProposalForm() {
               />
               <FormField
                 control={form.control}
-                name="name"
+                name="projectDescription"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="logo">Description</FormLabel>
