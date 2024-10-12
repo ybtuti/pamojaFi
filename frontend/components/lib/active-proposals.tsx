@@ -14,6 +14,7 @@ export interface Proposal {
   active: boolean;
   authorNamespace: string;
   votes: number;
+  raised: number;
 }
 
 const proposals: Proposal[] = [
@@ -38,6 +39,7 @@ const proposals: Proposal[] = [
     moreDetails:
       "The team behind this proposal are two students from Dedan Kimathi University. One pursuing a degree in Computer Science and the other in Tourism. They have a passion for cooking and have been bootstrapping the business for the last 5 years using their educational loans.",
     votes: 86,
+    raised: 50000,
   },
   {
     id: 2,
@@ -60,6 +62,7 @@ const proposals: Proposal[] = [
     moreDetails:
       "The team is committed to sustainable farming practices and aims to engage the local community in healthy eating habits through their organic produce.",
     votes: 55,
+    raised: 0,
   },
   {
     id: 3,
@@ -82,6 +85,7 @@ const proposals: Proposal[] = [
     moreDetails:
       "The project will provide jobs in the community and ensure a steady supply of quality fish to local markets.",
     votes: 77,
+    raised: 0,
   },
   {
     id: 4,
@@ -104,6 +108,7 @@ const proposals: Proposal[] = [
     moreDetails:
       "The greenhouse will utilize renewable energy to reduce costs and environmental impact, providing fresh produce year-round.",
     votes: 95,
+    raised: 0,
   },
   {
     id: 5,
@@ -126,6 +131,7 @@ const proposals: Proposal[] = [
     moreDetails:
       "This initiative will enhance local livestock production and contribute to the overall economy of the community.",
     votes: 100,
+    raised: 0,
   },
   {
     id: 6,
@@ -148,6 +154,7 @@ const proposals: Proposal[] = [
     moreDetails:
       "The project aims to create a sustainable farming model that benefits the environment and improves farmers' livelihoods.",
     votes: 88,
+    raised: 0,
   },
   {
     id: 7,
@@ -170,6 +177,7 @@ const proposals: Proposal[] = [
     moreDetails:
       "The initiative will provide access to natural remedies and promote awareness of the benefits of herbal medicine.",
     votes: 75,
+    raised: 0,
   },
 ];
 
