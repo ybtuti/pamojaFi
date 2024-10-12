@@ -7,6 +7,7 @@ import { FcDocument } from "react-icons/fc";
 import { PiFarmFill } from "react-icons/pi";
 import { BsStars } from "react-icons/bs";
 import { PiArrowCircleUpLeftDuotone } from "react-icons/pi";
+import { Link } from "react-router-dom";
 
 function Hero() {
   return (
@@ -21,10 +22,21 @@ function Hero() {
         </p>
         <div className="flex flex-col md:flex-row gap-2 w-[80%] items-center justify-center">
           <Button className="font-bold title md:text-lg bg-benefits text-hero w-full md:w-[20%]">
-            Get Started
+            <Link
+              to="/dashboard"
+              className="w-full h-full flex items-center justify-center"
+            >
+              Get Started
+            </Link>
           </Button>
+
           <Button className="border-benefits text-benefits border-2 text-lg title w-full md:w-[20%]">
-            Explore
+            <Link
+              to="/community"
+              className="w-full h-full flex items-center justify-center"
+            >
+              Explore
+            </Link>
           </Button>
         </div>
       </div>

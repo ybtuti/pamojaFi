@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -20,9 +21,9 @@ function Footer() {
               Join our growing community!
             </strong>
 
-            <a
+            <Link
               className="inline-flex items-center gap-2 rounded-full border border-white bg-white px-8 py-3 hover:bg-transparent hover:text-white focus:outline-none focus:ring active:bg-white/90 border-key"
-              href="/dashboard"
+              to="/dashboard"
             >
               <span className="text-sm font-medium text-hero logo">
                 {" "}
@@ -43,7 +44,7 @@ function Footer() {
                   d="M17 8l4 4m0 0l-4 4m4-4H3"
                 />
               </svg>
-            </a>
+            </Link>
           </div>
 
           <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
