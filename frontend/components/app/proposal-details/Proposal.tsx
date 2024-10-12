@@ -11,11 +11,18 @@ function ProposalDetail() {
   if (!proposal) {
     return <div>Proposal not found</div>;
   }
+  const handleClick = (action: string) => {
+    if (action === "fund") {
+      console.log("Funding project");
+    } else {
+      console.log("Voting for project");
+    }
+  };
 
   return (
     <div className="">
       <Navbar />
-      <div className="max-w-7xl md:mx-auto mx-2 my-0">
+      <div className="max-w-7xl md:mx-auto mx-2 my-0 mb-10">
         <div className="my-4">
           <img
             src={proposal.headerImageLink}
@@ -115,6 +122,21 @@ function ProposalDetail() {
             )}
           </div>
         </div>
+        {proposal.active ? (
+          <Button
+            className="bg-benefits w-full text-hero title mt-8 mb-1"
+            onClick={() => handleClick("fund")}
+          >
+            Fund Project
+          </Button>
+        ) : (
+          <Button
+            className="bg-benefits w-full text-hero title mt-8 mb-1"
+            onClick={() => handleClick("vote")}
+          >
+            Vote for this Project
+          </Button>
+        )}
       </div>
     </div>
   );

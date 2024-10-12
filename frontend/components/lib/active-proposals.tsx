@@ -83,7 +83,7 @@ const proposals: Proposal[] = [
       "https://image.fishfarmingexpert.com/1150808.jpg?imageId=1150808&panox=0&panoy=0&panow=0&panoh=0&width=1200&height=683",
     category: "Fish Farming",
     moreDetails:
-      "The project will provide jobs in the community and ensure a steady supply of quality fish to local markets.",
+      "The project will provide jobs in the community and ensure a steady supply of quality fish to local markets. An NFT is a data file, stored on a type of digital ledger called a blockchain, which can be sold and traded. The NFT can be associated with a particular asset – digital or physical – such as an image, art, music, or recording of a sports event.",
     votes: 77,
     raised: 0,
   },
@@ -106,7 +106,7 @@ const proposals: Proposal[] = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJkOGkN7mQvIu04EABTwf3L99xp67H1UoKJA&s",
     category: "Other",
     moreDetails:
-      "The greenhouse will utilize renewable energy to reduce costs and environmental impact, providing fresh produce year-round.",
+      "The greenhouse will utilize renewable energy to reduce costs and environmental impact, providing fresh produce year-round. An NFT is a data file, stored on a type of digital ledger called a blockchain, which can be sold and traded. The NFT can be associated with a particular asset – digital or physical – such as an image, art, music, or recording of a sports event.",
     votes: 95,
     raised: 0,
   },
@@ -152,7 +152,7 @@ const proposals: Proposal[] = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQat-zX6-Z9lzKma2Ro2t2owsMco-U_KY7XZg&s",
     category: "Other",
     moreDetails:
-      "The project aims to create a sustainable farming model that benefits the environment and improves farmers' livelihoods.",
+      "The project aims to create a sustainable farming model that benefits the environment and improves farmers' livelihoods. An NFT is a data file, stored on a type of digital ledger called a blockchain, which can be sold and traded. The NFT can be associated with a particular asset – digital or physical – such as an image, art, music, or recording of a sports event.",
     votes: 88,
     raised: 0,
   },
@@ -175,7 +175,7 @@ const proposals: Proposal[] = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzJvVFrBAhEE1N8QCpUrYkxFWjxpFtHpGhRw&s",
     category: "Crop Production",
     moreDetails:
-      "The initiative will provide access to natural remedies and promote awareness of the benefits of herbal medicine.",
+      "The initiative will provide access to natural remedies and promote awareness of the benefits of herbal medicine. An NFT is a data file, stored on a type of digital ledger called a blockchain, which can be sold and traded. The NFT can be associated with a particular asset – digital or physical – such as an image, art, music, or recording of a sports event.",
     votes: 75,
     raised: 0,
   },
