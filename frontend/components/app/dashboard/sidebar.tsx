@@ -20,6 +20,7 @@ import Market from "./marketplace";
 import Forums from "./forums";
 import Resources from "./resource-center";
 import Analytics from "./analytics";
+import { useWalletInfo } from "thirdweb/react";
 
 export function DashboardSidebar() {
   const [dashboardContent, setDashboardContent] = useState<string | undefined>(

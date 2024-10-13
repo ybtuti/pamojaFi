@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../ui/textarea";
 
 const formSchema = z.object({
   name: z.string(),
@@ -73,7 +74,7 @@ function CreateProposalForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid md:grid-cols-2 gap-4 mb-8">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 md:gap-6">
               <FormField
                 control={form.control}
                 name="name"
@@ -161,7 +162,7 @@ function CreateProposalForm() {
                   <FormItem>
                     <FormLabel className="logo">Description</FormLabel>
                     <FormControl>
-                      <Input
+                      <Textarea
                         placeholder="What does your project entail?"
                         className="title"
                         {...field}
@@ -225,7 +226,7 @@ function CreateProposalForm() {
                   <FormItem>
                     <FormLabel className="logo">Team Information</FormLabel>
                     <FormControl>
-                      <Input
+                      <Textarea
                         placeholder="Describe the team behind your project"
                         className="title"
                         {...field}
@@ -265,7 +266,7 @@ function CreateProposalForm() {
                   <FormItem>
                     <FormLabel className="logo">Additional Details</FormLabel>
                     <FormControl>
-                      <Input
+                      <Textarea
                         placeholder="Additional details about your project"
                         className="title"
                         {...field}
