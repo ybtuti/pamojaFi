@@ -99,14 +99,12 @@ function Navbar() {
       <div className="logo hidden md:flex">
         <ConnectButton
           client={client}
-          wallets={[
-            createWallet("com.coinbase.wallet", {
-              walletConfig: {
-                options: "smartWalletOnly",
-              },
-              chains: [base2, baseSepolia, sepolia],
-            }),
-          ]}
+          connectModal={{ size: "wide" }}
+          // wallets={[
+          //   createWallet("com.coinbase.wallet", {
+          //     chains: [base2, baseSepolia, sepolia],
+          //   }),
+          // ]}
         />
         {/* {!address && (
           <ConnectButton
