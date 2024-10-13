@@ -15,6 +15,7 @@ import {
 } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../ui/textarea";
+import WORLDid from "../../ui/IdKit";
 
 const formSchema = z.object({
   name: z.string(),
@@ -59,7 +60,7 @@ function CreateProposalForm() {
     console.log(proposal);
   }
   return (
-    <div className="mx-4">
+    <div className="mx-4 pb-8">
       <div>
         <h1 className="my-2 logo text-3xl font-semibold text-benefits">
           Create Proposal
@@ -281,12 +282,18 @@ function CreateProposalForm() {
               />
             </div>
           </div>
-          <Button
+          {/* <Button
             type="submit"
             className="w-full bg-benefits text-hero logo my-4"
           >
             Submit
-          </Button>
+          </Button> */}
+          <p className="text-sm logo text-[#808080]">
+            You need to verify your identity with WorldID before proceeding
+          </p>
+          <div className="flex items-center justify-center w-full border-2 border-benefits rounded-md">
+            <WORLDid />
+          </div>
         </form>
       </Form>
     </div>
