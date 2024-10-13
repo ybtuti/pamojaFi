@@ -14,9 +14,9 @@ import {AggregatorV3Interface, OracleLib} from "./libraries/OracleLib.sol";
  * @notice PamojaFi is a contract that allows users to fund a pool and withdraw their funds.
  */
 contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
-    // ===============================
-    //          Errors
-    // ===============================
+    /*//////////////////////////////////////////////////////////////
+                                 ERRORS
+    //////////////////////////////////////////////////////////////*/
 
     error PamojaFi__InvalidAddress();
     error PamojaFi__NoUsersProvided();
@@ -31,37 +31,38 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     error PamojaFi__InsufficientFunds();
     error PamojaFi__TransferFailed();
     error PamojaFi__StalePrice();
+    error PamojaFi__WithdrawalAmountMustBeGreaterThanZero();
+    error PamojaFi__UserHasNotBeenFunded();
 
     /// @title PamojaFi
     /// @dev Contract extending ERC4626C with additional asset management and pooling functionalities.
-    // ===============================
-    //          Types
-    // ===============================
+    /*//////////////////////////////////////////////////////////////
+                            USING DIRECTIVE
+    //////////////////////////////////////////////////////////////*/
+
     using OracleLib for AggregatorV3Interface;
 
-    // ===============================
-    //          State Variables
-    // ===============================
-    /// @dev Mapping to store the funds of each user.
-    mapping(address => uint256) private s_userBalances;
+    /*//////////////////////////////////////////////////////////////
+                            STATE VARIABLES
+    //////////////////////////////////////////////////////////////*/
 
-    /// @dev Mapping to store the proposal hashes for each user.
-    mapping(address => bytes32) private s_proposalHashes;
-
-    /// @dev Mapping to store the total amount funded in USD for each token ID.
-    mapping(uint256 => uint256) private s_totalFundedUSD;
-
-    /// @dev Boolean to track if the funding pool is active.
     bool private s_isPoolActive;
-
-    /// @dev Variable to track the total funds in the pool.
     uint256 private s_poolBalance;
-
-    /// @dev Instance of the Chainlink price feed for ETH/USD.
+    string private s_baseUri;
     AggregatorV3Interface private s_priceFeed;
 
-    /// @dev Base URI for metadata.
-    string private s_baseUri;
+    /*//////////////////////////////////////////////////////////////
+                                MAPPINGS
+    //////////////////////////////////////////////////////////////*/
+
+    mapping(address => uint256) private s_userBalances;
+    mapping(address => bytes32) private s_proposalHashes;
+    mapping(uint256 => uint256) private s_totalFundedUSD;
+    mapping(address => bool) private s_fundedUsers;
+
+    /*//////////////////////////////////////////////////////////////
+                                 EVENTS
+    //////////////////////////////////////////////////////////////*/
 
     /// @dev Event emitted when funds are deposited by a user.
     /// @param funder The address of the user who deposited funds.
@@ -94,8 +95,9 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     /// @param isActive The new status of the pool (true for active, false for inactive).
     event PoolStatusChanged(bool isActive);
 
-    /// @dev Mapping to track funded users
-    mapping(address => bool) private s_fundedUsers;
+    /*//////////////////////////////////////////////////////////////
+                               FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /// @dev Constructor to initialize the PamojaFi contract.
     /// @param priceFeedAddress The address of the price feed contract.
@@ -107,17 +109,15 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         s_isPoolActive = false;
     }
 
-    /**
-     *
-     *     STATE UPDATE FUNCTIONS
-     *
-     */
+    /*//////////////////////////////////////////////////////////////
+                           EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /// @dev Function to fund multiple users with a single transaction.
     /// @param userAddresses Array of user addresses to be funded.
     function fund(
         address[] calldata userAddresses
-    ) public payable nonReentrant {
+    ) external payable nonReentrant {
         uint256 numUsers = userAddresses.length;
         if (numUsers == 0) revert PamojaFi__NoUsersProvided();
 
@@ -137,6 +137,50 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         s_totalFundedUSD[tokenId] += totalDeposits;
 
         emit Funded(_msgSender(), totalDeposits, tokenId);
+    }
+
+    /// @dev Allows users who have been funded to withdraw their funds.
+    /// @param assets The amount of assets to withdraw.
+    /// @param receiver The address to receive the withdrawn assets.
+    /// @param owner The address of the token owner.
+    /// @return id The token ID associated with the withdrawal.
+    function withdraw(
+        uint256 assets,
+        address receiver,
+        address owner
+    ) public virtual override returns (uint256 id) {
+        // Check if the caller is the owner of the tokens
+        require(owner == _msgSender(), "Caller is not the owner");
+
+        // Check if the user has been funded
+        if (!s_fundedUsers[owner]) {
+            revert PamojaFi__UserHasNotBeenFunded();
+        }
+
+        // Check if the requested withdrawal amount is greater than zero
+        if (assets == 0) {
+            revert PamojaFi__WithdrawalAmountMustBeGreaterThanZero();
+        }
+
+        // Check if the owner has sufficient balance
+        uint256 userBalance = s_userBalances[owner];
+        if (userBalance <= assets) {
+            revert PamojaFi__InsufficientFunds();
+        }
+
+        // Update the user's balance
+        s_userBalances[owner] -= assets;
+
+        // Transfer the assets to the receiver
+        (bool success, ) = receiver.call{value: assets}("");
+        if (!success) {
+            revert PamojaFi__TransferFailed();
+        }
+        // Emit an event for the withdrawal
+        emit FundsWithdrawn(owner, assets);
+
+        // Return the token ID associated with the withdrawal
+        id = deposit(0, owner);
     }
 
     /*
@@ -162,7 +206,7 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
     /// @dev Function for users to withdraw their funds.
     function withdrawFunds() public nonReentrant {
-        uint256 userBalance = s_userBalances[_msgSender()]; // Get user balance
+        uint256 userBalance = s_userBalances[_msgSender()];
         if (userBalance == 0) revert PamojaFi__InsufficientFunds(); // Revert if insufficient funds
 
         s_userBalances[_msgSender()] = 0; // Reset user funds
@@ -198,8 +242,8 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         uint256 depositPerUser = s_poolBalance / numUsers;
 
         for (uint256 i = 0; i < numUsers; ++i) {
-            // if (getUserProposalHash(userAddresses[i]) == bytes32(0))
-            //     revert PamojaFi__UserHasNoActiveProposal();
+            if (getUserProposalHash(userAddresses[i]) == bytes32(0))
+                revert PamojaFi__UserHasNoActiveProposal();
             s_userBalances[userAddresses[i]] += depositPerUser;
         }
 
@@ -207,12 +251,6 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
         emit PoolEnded(s_poolBalance, depositPerUser);
     }
-
-    /**
-     *
-     *     SETTER FUNCTIONS
-     *
-     */
 
     /// @dev Function for the owner to set the pool active or inactive.
     /// @param _poolActive Boolean indicating if the pool should be active or inactive.
@@ -226,18 +264,6 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         s_isPoolActive = true;
         emit PoolStatusChanged(true);
     }
-
-    // /// @dev Function for the owner to update the Pyth contract address.
-    // /// @param _newPythContract The new address of the Pyth contract.
-    // function updatePythContract(address _newPythContract) public onlyOwner {
-    //     s_pyth = IPyth(_newPythContract);
-    // }
-
-    // /// @dev Function for the owner to update the price feed ID.
-    // /// @param _newPriceFeedId The new price feed ID.
-    // function updatePriceFeed(bytes32 _newPriceFeedId) public onlyOwner {
-    //     s_priceFeedId = _newPriceFeedId;
-    // }
 
     /// @dev Function for the owner to update the proposal address for a user.
     /// @param oldUserProposalAddress The old address of the user.
@@ -265,17 +291,27 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         s_proposalHashes[userProposalAddress] = newUserProposalHash;
     }
 
-    /**
-     *
-     *     HELPER FUNCTIONS
-     *
-     */
+    /*//////////////////////////////////////////////////////////////
+                           INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /// @dev Function to return the base URI for metadata.
     /// @return The base URI string.
     function _baseURI() internal view virtual override returns (string memory) {
         return s_baseUri;
     }
+
+    function _getLatestPrice() private view returns (uint256) {
+        (, int256 price, , uint256 updatedAt, ) = s_priceFeed
+            .staleCheckLatestRoundData();
+        require(price > 0, "Invalid price");
+        require(block.timestamp - updatedAt <= 3600, "Stale price");
+        return uint256(price);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                                GETTERS
+    //////////////////////////////////////////////////////////////*/
 
     /// @dev Function to get the proposal hash of a user.
     /// @param proposalUserAddress The address of the user.
@@ -312,18 +348,6 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         return address(s_priceFeed);
     }
 
-    // function getPriceFeedId() public view returns (bytes32) {
-    //     return s_priceFeedId;
-    // }
-
-    function _getLatestPrice() private view returns (uint256) {
-        (, int256 price, , uint256 updatedAt, ) = s_priceFeed
-            .staleCheckLatestRoundData();
-        require(price > 0, "Invalid price");
-        require(block.timestamp - updatedAt <= 3600, "Stale price");
-        return uint256(price);
-    }
-
     /// @dev Function to calculate the scaled amount in Wei for 1 USD.
     /// @return oneDollarInWei The equivalent of 1 USD in Wei.
     function getScaledAmount() public view returns (uint256 oneDollarInWei) {
@@ -336,52 +360,6 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         // Calculate how much Wei is equivalent to 1 USD
         oneDollarInWei = (1e18 * 1e18) / ethPrice18Decimals;
         return oneDollarInWei;
-    }
-
-    // /// @dev Internal function to update the Pyth price feeds and calculate the scaled amount.
-    // /// @param priceUpdate Array of price update data from Pyth.
-    // /// @return oneDollarInWei The equivalent of 1 USD in Wei.
-    // function _updatePythPriceFeeds(
-    //     bytes[] calldata priceUpdate // Remove this function as it's not needed for Chainlink
-    // ) private returns (uint256 oneDollarInWei) {
-    //     // This function is no longer needed; remove it or refactor as necessary
-    // }
-
-    /// @dev Allows users who have been funded to withdraw their funds.
-    /// @param assets The amount of assets to withdraw.
-    /// @param receiver The address to receive the withdrawn assets.
-    /// @param owner The address of the token owner.
-    /// @return id The token ID associated with the withdrawal.
-    function withdraw(
-        uint256 assets,
-        address receiver,
-        address owner
-    ) public virtual override returns (uint256 id) {
-        // Check if the caller is the owner of the tokens
-        require(owner == _msgSender(), "Caller is not the owner");
-
-        // Check if the user has been funded
-        require(s_fundedUsers[owner], "User has not been funded");
-
-        // Check if the requested withdrawal amount is greater than zero
-        require(assets > 0, "Withdrawal amount must be greater than zero");
-
-        // Check if the owner has sufficient balance
-        uint256 userBalance = s_userBalances[owner];
-        require(userBalance >= assets, "Insufficient balance for withdrawal");
-
-        // Update the user's balance
-        s_userBalances[owner] -= assets;
-
-        // Transfer the assets to the receiver
-        (bool success, ) = receiver.call{value: assets}("");
-        require(success, "Transfer failed");
-
-        // Emit an event for the withdrawal
-        emit FundsWithdrawn(owner, assets);
-
-        // Return the token ID associated with the withdrawal
-        id = deposit(0, owner); // Assuming deposit function returns the token ID
     }
 
     /**
