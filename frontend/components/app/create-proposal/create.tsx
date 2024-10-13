@@ -20,7 +20,7 @@ const formSchema = z.object({
   name: z.string(),
   projectLink: z.string().url(),
   projectXUsername: z.string(),
-  projectHeaderImageLink: z.string(),
+  projectHeaderImageLink: z.string().url(),
   projectCategory: z.string(),
   projectDescription: z.string(),
   targetAmountETH: z.string(),
