@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { EAS } from "@ethereum-attestation-service/eas-sdk";
-import { z } from "zod";
+import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/button";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 import { Web3 } from "web3";
 import {
   Form,
@@ -23,6 +23,7 @@ import { ABI } from "./attestation_ABI";
 const provider = new ethers.JsonRpcProvider("https://base-rpc.publicnode.com");
 const contractAddress = "0x2c7eE1E5f416dfF40054c27A62f7B357C4E8619C";
 const indexerContract = new ethers.Contract(contractAddress, ABI, provider);
+import { sdk } from "../../../src/clent";
 
 const formSchema = z.object({
   name: z.string(),
@@ -95,11 +96,12 @@ function CreateProposalForm() {
         votes: 0,
         proposers: [],
         authorNamespace: "0x123abc45739892783618hjdghyuwe783",
-        id: uuid(),
+        id: uuidv4(),
       };
       // console.log(proposal);
-      setVerifying(true);
+      setVerifying(false);
     } catch (error) {
+      setVerifying(false);
       console.error("Error:", error);
     }
   }
