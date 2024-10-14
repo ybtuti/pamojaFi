@@ -47,9 +47,8 @@ function Navbar() {
   const account = useAccount();
   const location = useLocation();
   const currentPath = location.pathname;
-  console.log(currentPath);
   return (
-    <div className="flex justify-between items-center max-w-[1190px] mx-auto my-0 py-8">
+    <div className="flex justify-between items-center max-w-[1190px] mx-auto my-0 py-8 px-4">
       <Link to="/" className="mx-2">
         <h1 className="text-2xl font-extrabold text-benefits logo ">
           pamojaFI.

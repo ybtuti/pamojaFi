@@ -1,9 +1,11 @@
-import React from "react";
-import { z } from "zod";
+import React, { useEffect, useState } from "react";
+import { EAS } from "@ethereum-attestation-service/eas-sdk";
+import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/button";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
+import { Web3 } from "web3";
 import {
   Form,
   FormControl,
@@ -15,6 +17,13 @@ import {
 } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../ui/textarea";
+import WORLDid from "../../ui/IdKit";
+import { ethers } from "ethers";
+import { ABI } from "./attestation_ABI";
+const provider = new ethers.JsonRpcProvider("https://base-rpc.publicnode.com");
+const contractAddress = "0x2c7eE1E5f416dfF40054c27A62f7B357C4E8619C";
+const indexerContract = new ethers.Contract(contractAddress, ABI, provider);
+import { sdk } from "../../../src/clent";
 
 const formSchema = z.object({
   name: z.string(),
@@ -31,6 +40,30 @@ const formSchema = z.object({
 });
 
 function CreateProposalForm() {
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [verifying, setVerifying] = React.useState(false);
+  async function getAttestationUID(walletAddress, schemaID) {
+    try {
+      const attestationUID = await indexerContract.getAttestationUid(
+        walletAddress,
+        schemaID
+      );
+      return attestationUID;
+    } catch (error) {
+      console.error("Error fetching Attestation UID:", error);
+    }
+  }
+  async function getAttestationData(uid) {
+    try {
+      const EASContractAddress = "0x4200000000000000000000000000000000000021";
+      const eas = new EAS(EASContractAddress);
+      eas.connect(provider);
+      const attestation = await eas.getAttestation(uid);
+      return attestation;
+    } catch (error) {
+      console.error("Error fetching Metadata: ", error);
+    }
+  }
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,18 +81,39 @@ function CreateProposalForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    const proposal = {
-      ...values,
-      votes: 0,
-      proposers: [],
-      authorNamespace: "0x123abc45739892783618hjdghyuwe783",
-      id: uuid(),
-    };
-    console.log(proposal);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const walletAddress = "0x115aBfDa6b101bDC813B90c2780952E89E185F54";
+    const schemaID =
+      "0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9";
+    try {
+      setVerifying(true);
+      const uid = await getAttestationUID(walletAddress, schemaID);
+      console.log("UID:", uid);
+      const metadata = await getAttestationData(uid);
+      console.log("Metadata:", metadata);
+      const proposal = {
+        ...values,
+        votes: 0,
+        proposers: [],
+        authorNamespace: "0x123abc45739892783618hjdghyuwe783",
+        id: uuidv4(),
+      };
+      // console.log(proposal);
+      setVerifying(false);
+    } catch (error) {
+      setVerifying(false);
+      console.error("Error:", error);
+    }
+  }
+  if (verifying) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <h1 className="logo font-bold text-xl">Verifying...</h1>
+      </div>
+    );
   }
   return (
-    <div className="mx-4">
+    <div className="mx-4 pb-8">
       <div>
         <h1 className="my-2 logo text-3xl font-semibold text-benefits">
           Create Proposal
@@ -284,9 +338,16 @@ function CreateProposalForm() {
           <Button
             type="submit"
             className="w-full bg-benefits text-hero logo my-4"
+            disabled={form.formState.isSubmitting}
           >
             Submit
           </Button>
+          {/* <p className="text-sm logo text-[#808080]">
+            You need to verify your identity with WorldID before proceeding
+          </p>
+          <div className="flex items-center justify-center w-full border-2 border-benefits rounded-md">
+            <WORLDid />
+          </div> */}
         </form>
       </Form>
     </div>
