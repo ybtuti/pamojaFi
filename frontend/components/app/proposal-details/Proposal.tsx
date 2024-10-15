@@ -20,7 +20,7 @@ function ProposalDetail() {
   };
 
   return (
-    <div className="">
+    <div className="mx-2">
       <Navbar />
       <div className="max-w-7xl md:mx-auto mx-2 my-0 mb-10">
         <div className="my-4">
