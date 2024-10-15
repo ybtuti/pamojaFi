@@ -48,7 +48,8 @@ function CreateProposalForm() {
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
-      console.log(accounts[0]);
+
+      setWalletAddress(accounts[0]);
     };
     fetchAccounts();
   }, []);
@@ -94,7 +95,8 @@ function CreateProposalForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const walletAddress = "0x115aBfDa6b101bDC813B90c2780952E89E185F54";
+    console.log(walletAddress);
+    // const walletAddress = "0xEe496FB88cFB28bCA4DAA65abf3088BdaB5Bc409";
     const schemaID =
       "0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9";
     try {
