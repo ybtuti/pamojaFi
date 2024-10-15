@@ -41,6 +41,18 @@ const formSchema = z.object({
 
 function CreateProposalForm() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      //@ts-ignore
+      const { ethereum } = window;
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      console.log(accounts[0]);
+    };
+    fetchAccounts();
+  }, []);
+
   const [verifying, setVerifying] = React.useState(false);
   async function getAttestationUID(walletAddress, schemaID) {
     try {
