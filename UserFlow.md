@@ -1,104 +1,61 @@
 
+---
+
 # 🎉 User Flow for PamojaFi Application 🌱
 
----
+![userflow](./screenshots/image.png)
 
 ## Start
 
-- **User Registration/Login**
+- **Connect Wallet**
+  - User connects their **crypto wallet** as the first step 🔑.
 
 ---
 
 ## 🚀 User Actions
 
-### 1. **Register/Login**
-   - User selects **"Register"** or **"Login"** 
-   - Input **Email** and **Password** / **Wallet Connection** 🔑
-   - Verify Identity using **Worldcoin** 🌍
-   - Proceed to **User Dashboard** 📊
-
----
-
-### 2. **User Dashboard** 
-- **Options:**
-  - **Submit Proposal** 📝
-  - **Withdraw Funds** 💵
-  - **Browse Projects** 🔍
-  - **Access Funding Pools** 🏊‍♂️
+### 1. **Dashboard**
+   - After connecting the wallet, users land on the **Dashboard** 📊.
+   - **Options available:**
+     - **Submit Proposal** 📝
+     - **Community Voting** 🗳️
+     - **Browse Proposals** 🔍
 
 ---
 
 ## 🌾 Farmer Actions
 
-### 3. **Submit Proposal**
-   - User selects **"Submit Proposal"** ➕
-   - Input **Project Title**, **Description**, and **Funding Goal** 🎯
-   - Attach relevant documents (optional) 📎
-   - Submit for **Governance Review** ✔️
-   - Receive **confirmation of submission** 📬
+### 2. **Submit Proposal**
+   - User selects **"Submit Proposal"** ➕.
+   - Input **Project Title**, **Description**, and **Funding Goal** 🎯.
+   - Complete **Coinbase verification** for identity check 🔍.
+   - Once verified, submit the proposal to the **Pending Section** 📂.
+   - Await **community voting** for approval.
 
 ---
 
-### 4. **Withdraw Funds**
-   - User selects **"Withdraw Funds"** 💳
-   - View available funds in the **Vault** 🔒
-   - Request **withdrawal** ✉️
-   - **Admin approval** for withdrawal ✅
-   - Confirmation of **fund transfer** 💰
+## 👨‍💼 Admin & Governance Actions
 
----
-
-## 👨‍💼 Admin Actions
-
-### 5. **Governance Review**
-   - Admin accesses **"Proposal Review"** section 🔍
-   - View all submitted proposals 📑
-   - **Approve** ✅ or **Reject Proposal** ❌
-   - Notify Farmer of decision (via dashboard and email) 📧
+### 3. **Community Voting**
+   - Once the proposal is submitted, it undergoes **Community Voting**.
+   - **Members cast votes** to either support or reject the proposal 🗳️.
+   - If the majority support it, the proposal gets **approved** ✅.
 
 ---
 
 ## 💰 Funder Actions
 
-### 6. **Browse Projects**
-   - User selects **"Browse Projects"** 📜
-   - View list of **approved projects** 🌟
-   - Select a project to view **details** 🔍
+### 4. **Users Fund**
+   - Once a proposal is **approved**, users can contribute funds 💸.
+   - **Funders** pledge amounts to the project 📊.
+   - After funding goals are reached, the system allows the **release of funds** 💵.
 
 ---
 
-### 7. **Community Voting**
-   - Cast Vote (**Support** or **Oppose**) 🗳️
-   - **Confirmation of vote** 📊
-
+### 5. **Release Funds**
+   - After successful **community voting** and adequate funding, funds are **released** to the project owner 💰.
 ---
 
-### 8. **Contribute to Project**
-   - User selects **"Contribute to Project"** 💸
-   - Input **contribution amount** 💵
-   - Confirm transaction via **wallet** 🔑
-   - Receive **NFT** as proof of contribution 🎨
+🔚 End Flow
+After completing any action or review, users can log out or continue to explore other features. Secure logout options are available to ensure account safety.
 
----
-
-## 🏊 Funding Pool Actions
-
-### 9. **Access Funding Pools**
-   - User accesses **"Funding Pool"** section 🌊
-   - View ongoing **funding pools** 🏦
-   - Contribute to a specific **pool** 💰
-   - **Confirmation of contribution** ✅
-
----
-
-## 🤝 Community Engagement
-
-### 10. **Feedback Mechanism**
-   - User accesses **"Project Feedback"** 📋
-   - Like/Dislike projects to provide feedback 👍👎
-   - View community feedback on submitted projects 💬
-
----
-
-## 🔚 End Flow
-- User logs out or navigates away 🚪
