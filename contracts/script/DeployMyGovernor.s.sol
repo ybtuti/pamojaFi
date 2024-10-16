@@ -9,7 +9,6 @@ import {console} from "forge-std/console.sol";
 
 contract DeployMyGovernor is Script {
     function run() external {
-        
         address deployer = msg.sender;
 
         // Replace these with actual addresses or logic to get the addresses
