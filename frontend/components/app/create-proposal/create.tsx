@@ -160,17 +160,10 @@ function CreateProposalForm() {
       console.error("Error:", error);
     }
   }
-  if (verifying) {
+  if (verifying || transacting) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <h1 className="logo font-bold text-xl">Verifying...</h1>
-      </div>
-    );
-  }
-  if (transacting) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <h1 className="logo font-bold text-xl">Transacting...</h1>
       </div>
     );
   }
