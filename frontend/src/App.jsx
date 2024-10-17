@@ -7,6 +7,7 @@ import Pending from "../pages/Pending";
 import ProjectView from "../pages/ProjectView";
 import ProposalDetail from "../components/app/proposal-details/Proposal";
 import ErrorPage from "../pages/ErrorPage";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </div>
   );
 }

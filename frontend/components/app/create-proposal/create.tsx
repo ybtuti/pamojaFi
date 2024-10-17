@@ -23,7 +23,11 @@ import { ABI } from "./attestation_ABI";
 const provider = new ethers.JsonRpcProvider("https://base-rpc.publicnode.com");
 const contractAddress = "0x2c7eE1E5f416dfF40054c27A62f7B357C4E8619C";
 const indexerContract = new ethers.Contract(contractAddress, ABI, provider);
-import { sdk } from "../../../src/clent";
+import { prepareContractCall } from "thirdweb";
+import { useSendTransaction } from "thirdweb/react";
+import { contract } from "../../../src/client";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   name: z.string(),
@@ -40,7 +44,11 @@ const formSchema = z.object({
 });
 
 function CreateProposalForm() {
+  const navigate = useNavigate();
+  const { mutate: sendTransaction } = useSendTransaction();
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [transacting, setTransacting] = useState(false);
+
   useEffect(() => {
     const fetchAccounts = async () => {
       //@ts-ignore
@@ -48,7 +56,6 @@ function CreateProposalForm() {
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
-
       setWalletAddress(accounts[0]);
     };
     fetchAccounts();
@@ -93,6 +100,11 @@ function CreateProposalForm() {
       moreProjectDetails: "",
     },
   });
+  function getRandomBigInt(min: bigint, max: bigint): bigint {
+    const range = max - min + 1n;
+    const randomValue = BigInt(Math.floor(Math.random() * Number(range)));
+    return min + randomValue;
+  }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(walletAddress);
@@ -104,7 +116,7 @@ function CreateProposalForm() {
       const uid = await getAttestationUID(walletAddress, schemaID);
       console.log("UID:", uid);
       const metadata = await getAttestationData(uid);
-      console.log("Metadata:", metadata);
+      setVerifying(false);
       const proposal = {
         ...values,
         votes: 0,
@@ -112,10 +124,39 @@ function CreateProposalForm() {
         authorNamespace: "0x123abc45739892783618hjdghyuwe783",
         id: uuidv4(),
       };
-      // console.log(proposal);
-      setVerifying(false);
+      const randomBigInt = getRandomBigInt(0n, 10000n);
+      const targetAmountWei = BigInt(
+        Math.floor(parseFloat(proposal.targetAmountETH) * 1e18)
+      );
+      setTransacting(true);
+      const transaction = prepareContractCall({
+        contract,
+        method:
+          "function createproposal(uint256 _proposalId, string _name, uint256 _targetEth, string _projectLink, address _projectWalletAddress, string _imageUrl, string _teamInformation, string _category, string _relevantLinks, string _shortDescription, string _additionalDetails) returns (uint256)",
+        params: [
+          randomBigInt,
+          proposal.name,
+          targetAmountWei,
+          proposal.projectLink,
+          proposal.walletAddress,
+          proposal.projectHeaderImageLink,
+          proposal.projectTeamInformation,
+          proposal.projectCategory,
+          proposal.otherLinks,
+          proposal.projectDescription,
+          proposal.moreProjectDetails,
+        ],
+      });
+      await sendTransaction(transaction);
+      toast.success("Proposal created successfully. Redirecting to Dashboard");
+      if (transaction) {
+        // navigate("/dashboard");
+        setTransacting(false);
+      }
     } catch (error) {
+      toast.error("Error creating proposal");
       setVerifying(false);
+      setTransacting(false);
       console.error("Error:", error);
     }
   }
@@ -123,6 +164,13 @@ function CreateProposalForm() {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <h1 className="logo font-bold text-xl">Verifying...</h1>
+      </div>
+    );
+  }
+  if (transacting) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <h1 className="logo font-bold text-xl">Transacting...</h1>
       </div>
     );
   }
