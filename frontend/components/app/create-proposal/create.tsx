@@ -23,7 +23,11 @@ import { ABI } from "./attestation_ABI";
 const provider = new ethers.JsonRpcProvider("https://base-rpc.publicnode.com");
 const contractAddress = "0x2c7eE1E5f416dfF40054c27A62f7B357C4E8619C";
 const indexerContract = new ethers.Contract(contractAddress, ABI, provider);
-import { sdk } from "../../../src/clent";
+import { prepareContractCall } from "thirdweb";
+import { useSendTransaction } from "thirdweb/react";
+import { contract } from "../../../src/client";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   name: z.string(),
@@ -40,7 +44,11 @@ const formSchema = z.object({
 });
 
 function CreateProposalForm() {
+  const navigate = useNavigate();
+  const { mutate: sendTransaction } = useSendTransaction();
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [transacting, setTransacting] = useState(false);
+
   useEffect(() => {
     const fetchAccounts = async () => {
       //@ts-ignore
@@ -48,7 +56,6 @@ function CreateProposalForm() {
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
-
       setWalletAddress(accounts[0]);
     };
     fetchAccounts();
@@ -93,9 +100,13 @@ function CreateProposalForm() {
       moreProjectDetails: "",
     },
   });
+  function getRandomBigInt(min: bigint, max: bigint): bigint {
+    const range = max - min + 1n;
+    const randomValue = BigInt(Math.floor(Math.random() * Number(range)));
+    return min + randomValue;
+  }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(walletAddress);
     // const walletAddress = "0xEe496FB88cFB28bCA4DAA65abf3088BdaB5Bc409";
     const schemaID =
       "0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9";
@@ -112,17 +123,64 @@ function CreateProposalForm() {
         authorNamespace: "0x123abc45739892783618hjdghyuwe783",
         id: uuidv4(),
       };
-      // console.log(proposal);
+      toast.success(
+        "Account successfully verified. You can now send your proposal"
+      );
       setVerifying(false);
     } catch (error) {
+      toast.error("Error verifying your account.");
       setVerifying(false);
       console.error("Error:", error);
     }
   }
-  if (verifying) {
+
+  const submitProposal = async (proposal) => {
+    setVerifying(false);
+    try {
+      setTransacting(true);
+      const randomBigInt = getRandomBigInt(0n, 10000n);
+      const targetAmountWei = BigInt(
+        Math.floor(parseFloat(proposal.targetAmountETH) * 1e18)
+      );
+      const transaction = prepareContractCall({
+        contract,
+        method:
+          "function createproposal(uint256 _proposalId, string _name, uint256 _targetEth, string _projectLink, address _projectWalletAddress, string _imageUrl, string _teamInformation, string _category, string _relevantLinks, string _shortDescription, string _additionalDetails) returns (uint256)",
+        params: [
+          randomBigInt,
+          proposal.name,
+          targetAmountWei,
+          proposal.projectLink,
+          proposal.walletAddress,
+          proposal.projectHeaderImageLink,
+          proposal.projectTeamInformation,
+          proposal.projectCategory,
+          proposal.otherLinks,
+          proposal.projectDescription,
+          proposal.moreProjectDetails,
+        ],
+      });
+      await sendTransaction(transaction);
+      toast.success("Proposal created successfully. Redirecting to Dashboard");
+      setTransacting(false);
+      // navigate("/dashboard");
+    } catch (error) {
+      toast.error("Error submitting proposal");
+      console.error("Error submitting proposal:", error);
+    }
+  };
+
+  if (verifying || transacting) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <h1 className="logo font-bold text-xl">Verifying...</h1>
+        <h1 className="logo font-bold text-xl">Verifying Account...</h1>
+      </div>
+    );
+  }
+  if (transacting) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <h1 className="logo font-bold text-xl">Transacting...</h1>
       </div>
     );
   }
@@ -349,19 +407,23 @@ function CreateProposalForm() {
               />
             </div>
           </div>
-          <Button
-            type="submit"
-            className="w-full bg-benefits text-hero logo my-4"
-            disabled={form.formState.isSubmitting}
-          >
-            Submit
-          </Button>
-          {/* <p className="text-sm logo text-[#808080]">
-            You need to verify your identity with WorldID before proceeding
-          </p>
-          <div className="flex items-center justify-center w-full border-2 border-benefits rounded-md">
-            <WORLDid />
-          </div> */}
+          {verifying ? (
+            <Button
+              type="submit"
+              className="w-full bg-benefits text-hero logo my-4"
+            >
+              Verify
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="w-full bg-benefits text-hero logo my-4"
+              disabled={form.formState.isSubmitting}
+              onClick={() => submitProposal(form.getValues())}
+            >
+              Submit
+            </Button>
+          )}
         </form>
       </Form>
     </div>

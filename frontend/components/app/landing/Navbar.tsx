@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { client } from "../../../src/clent";
+import { client } from "../../../src/client";
 import { ConnectButton } from "thirdweb/react";
 import { IoMenu } from "react-icons/io5";
 import {
