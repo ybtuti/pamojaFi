@@ -116,7 +116,7 @@ function CreateProposalForm() {
       const uid = await getAttestationUID(walletAddress, schemaID);
       console.log("UID:", uid);
       const metadata = await getAttestationData(uid);
-      setVerifying(false);
+      console.log("Metadata:", metadata);
       const proposal = {
         ...values,
         votes: 0,
@@ -147,12 +147,11 @@ function CreateProposalForm() {
           proposal.moreProjectDetails,
         ],
       });
-      await sendTransaction(transaction);
+      sendTransaction(transaction);
       toast.success("Proposal created successfully. Redirecting to Dashboard");
-      if (transaction) {
-        // navigate("/dashboard");
-        setTransacting(false);
-      }
+      setVerifying(false);
+      setTransacting(false);
+      // navigate("/dashboard");
     } catch (error) {
       toast.error("Error creating proposal");
       setVerifying(false);
@@ -160,10 +159,11 @@ function CreateProposalForm() {
       console.error("Error:", error);
     }
   }
+
   if (verifying || transacting) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <h1 className="logo font-bold text-xl">Verifying...</h1>
+        <h1 className="logo font-bold text-xl">Verifying & Transacting...</h1>
       </div>
     );
   }
