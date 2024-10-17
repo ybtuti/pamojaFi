@@ -6,6 +6,7 @@ import Community from "../pages/Community";
 import Pending from "../pages/Pending";
 import ProjectView from "../pages/ProjectView";
 import ProposalDetail from "../components/app/proposal-details/Proposal";
+import ErrorPage from "../pages/ErrorPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/pending" element={<Pending />} />
           <Route path="/project" element={<ProjectView />} />
           <Route path="/proposals/:id" element={<ProposalDetail />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
     </div>
