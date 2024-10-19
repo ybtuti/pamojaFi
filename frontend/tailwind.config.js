@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import daisyui from "daisyui";
 export default {
   content: [
     "./index.html",
@@ -25,5 +26,5 @@ export default {
       footer2: "#003300",
     },
   },
-  plugins: [],
+  plugins: [daisyui],
 };

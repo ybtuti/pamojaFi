@@ -48,6 +48,7 @@ function CreateProposalForm() {
   const { mutate: sendTransaction } = useSendTransaction();
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [transacting, setTransacting] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -126,6 +127,7 @@ function CreateProposalForm() {
       toast.success(
         "Account successfully verified. You can now send your proposal"
       );
+      setIsVerified(true);
       setVerifying(false);
     } catch (error) {
       toast.error("Error verifying your account.");
@@ -161,7 +163,7 @@ function CreateProposalForm() {
         ],
       });
       await sendTransaction(transaction);
-      toast.success("Proposal created successfully. Redirecting to Dashboard");
+      toast.success("Transaction initiated successfully");
       setTransacting(false);
       // navigate("/dashboard");
     } catch (error) {
@@ -187,10 +189,10 @@ function CreateProposalForm() {
   return (
     <div className="mx-4 pb-8">
       <div>
-        <h1 className="my-2 logo text-3xl font-semibold text-benefits">
+        <h1 className="my-2 logo text-3xl font-semibold text-benefits dark:text-neutral-100">
           Create Proposal
         </h1>
-        <p className="relaxed title max-w-3xl leading-relaxed my-4 text-sm">
+        <p className="relaxed title max-w-3xl leading-relaxed my-4 text-sm dark:text-neutral-100">
           Please fill in the details of your project. After submission your
           project will be reviewed by the community members and users who
           believe in your idea will exercise their community voting power to
@@ -407,21 +409,21 @@ function CreateProposalForm() {
               />
             </div>
           </div>
-          {verifying ? (
+          {isVerified ? (
             <Button
               type="submit"
               className="w-full bg-benefits text-hero logo my-4"
+              onClick={() => submitProposal(form.getValues())}
             >
-              Verify
+              Submit
             </Button>
           ) : (
             <Button
               type="submit"
               className="w-full bg-benefits text-hero logo my-4"
               disabled={form.formState.isSubmitting}
-              onClick={() => submitProposal(form.getValues())}
             >
-              Submit
+              Verify
             </Button>
           )}
         </form>

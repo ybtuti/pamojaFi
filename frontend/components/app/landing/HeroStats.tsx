@@ -1,4 +1,5 @@
 import { FocusCards } from "../../../components/ui/focus-cards";
+//@ts-ignore
 import hero1 from "../../../public/hero1.jpg";
 
 export function HeroStats() {
@@ -20,5 +21,6 @@ export function HeroStats() {
     },
   ];
 
+  //@ts-ignore
   return <FocusCards cards={cards} />;
 }

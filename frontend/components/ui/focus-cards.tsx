@@ -26,7 +26,6 @@ export const Card = React.memo(
       <LazyLoadImage
         src={card.src}
         alt={card.title}
-        fill
         className="md:object-cover object-fill absolute inset-0"
       />
       <div

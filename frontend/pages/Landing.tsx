@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../components/app/landing/Navbar";
+import Navbar from "../components/app/landing/LandingNavbar";
 import Hero from "../components/app/landing/Hero";
 import Benefits from "../components/app/landing/Benefits";
 import Works from "../components/app/landing/Works";
@@ -16,7 +16,7 @@ function Landing() {
       <div className="bg-[#0B373D] py-4" id="benefits">
         <Benefits />
       </div>
-      <div className="bg-works py-2">
+      <div className="bg-works">
         <Works />
       </div>
       <div className="bg-benefits py-2">

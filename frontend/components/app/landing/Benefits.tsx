@@ -47,7 +47,7 @@ const benefits = [
 function Benefits() {
   return (
     <div className="max-w-[1190px] mx-auto my-0">
-      <h1 className="logo text-xl lg:text-2xl text-center  text-hero">
+      <h1 className="logo text-xl lg:text-2xl text-center text-hero">
         Efficient and Integrated Agricultural Services
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-16">

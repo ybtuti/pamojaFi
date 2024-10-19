@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 function Hero() {
   return (
-    <div className="bg-hero relative">
+    <div className="bg-hero relative pb-4">
       <div className="flex items-center justify-center flex-col mt-[2rem] mb-8 pb-4">
         <h1 className="md:text-5xl text-2xl mt-[3rem] mb-8 logo font-bold text-gray-800 md:w-[8-0%] w-full text-center text-benefits">
           Empowering Farmers with Community-Driven Solutions One Farm at a Time
@@ -30,7 +30,7 @@ function Hero() {
             </Link>
           </Button>
 
-          <Button className="border-benefits text-benefits border-2 text-lg title w-full md:w-[20%]">
+          <Button className="border-benefits text-benefits border-2 dark:border-transparent dark:text-hero text-lg title w-full md:w-[20%]">
             <Link
               to="/community"
               className="w-full h-full flex items-center justify-center"
