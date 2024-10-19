@@ -10,7 +10,7 @@ function PendingProposals() {
         <h1 className="logo text-xl font-semibold lg:text-2xl">
           Pending Proposals
         </h1>
-        <p className="title text-benefits leading-relaxed w-full md:max-w-[40%]">
+        <p className="title text-benefits leading-relaxed w-full md:max-w-[40%] dark:text-neutral-200">
           These are proposals from farmers across the continent that are still
           being voted on by the community.
         </p>

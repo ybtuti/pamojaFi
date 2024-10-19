@@ -19,7 +19,7 @@ function Dashboard() {
     const randomNumber = Math.floor(Math.random() * 1000);
     const username = `${randomUsername}${randomNumber}`;
     console.log(username);
-    localStorage.setItem("user", `${username}`);
+    localStorage.setItem("currentUser", `${username}`);
     setIsUser(true);
     return username;
   };
@@ -36,13 +36,17 @@ function Dashboard() {
 
   useEffect(() => {
     const createUser = async () => {
+      console.log("function triggered => create user");
       try {
         setLoading(true);
-        const user: string | null = localStorage.getItem("user");
+        const user: string | null = localStorage.getItem("currentUser");
+        console.log(user);
         if (user) {
+          toast.success("User already exists");
           setIsUser(true);
-          return;
         } else {
+          console.log("creating user");
+          console.log(isUser);
           setIsUser(false);
           if (walletAddress) {
             const username = generateRandomUsername();
@@ -52,7 +56,8 @@ function Dashboard() {
               method: "function addUser(address _userAddress, string _name)",
               params: [address, username],
             });
-            sendTransaction(transaction);
+            console.log(username, address);
+            await sendTransaction(transaction);
             toast.success("User created successfully");
           } else {
             setIsError(true);
@@ -64,6 +69,7 @@ function Dashboard() {
         console.log(error);
       }
     };
+    createUser();
   }, []);
 
   if (loading) {
