@@ -40,9 +40,9 @@ interface DisplayBasenameProps {
 //       <Address />
 //     </Identity>
 //   );
-// }
+// } 153E44
 
-function Navbar() {
+function Navbar({ landing }: { landing?: boolean }) {
   const { address } = useAccount();
   const account = useAccount();
   const location = useLocation();
@@ -50,7 +50,11 @@ function Navbar() {
   return (
     <div className="flex justify-between items-center max-w-[1190px] mx-auto my-0 py-8 px-4">
       <Link to="/" className="mx-2">
-        <h1 className="text-2xl font-extrabold text-benefits logo">
+        <h1
+          className={`text-2xl font-extrabold text-benefits logo ${
+            !landing ? "dark:text-hero" : "dark:text-benefits"
+          }`}
+        >
           pamojaFI.
         </h1>
       </Link>
@@ -58,8 +62,10 @@ function Navbar() {
         <Link
           to="/dashboard"
           className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
+            !landing ? "dark:text-hero" : "dark:text-benefits"
+          } ${
             currentPath === "/dashboard"
-              ? "border-b-[2px]  border-benefits"
+              ? "border-b-[2px]  border-benefits dark:border-hero"
               : ""
           }`}
         >
@@ -69,6 +75,8 @@ function Navbar() {
         <Link
           to="/create"
           className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
+            !landing ? "dark:text-hero" : "dark:text-benefits"
+          } ${
             currentPath === "/create" ? "border-b-[2px]  border-benefits" : ""
           }`}
         >
@@ -78,6 +86,8 @@ function Navbar() {
         <Link
           to="/pending"
           className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
+            !landing ? "dark:text-hero" : "dark:text-benefits"
+          } ${
             currentPath === "/pending" ? "border-b-[2px]  border-benefits" : ""
           }`}
         >
@@ -87,6 +97,8 @@ function Navbar() {
         <Link
           to="/community"
           className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
+            !landing ? "dark:text-hero" : "dark:text-benefits"
+          } ${
             currentPath === "/community"
               ? "border-b-[2px]  border-benefits"
               : ""

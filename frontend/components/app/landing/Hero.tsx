@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 function Hero() {
   return (
-    <div className="bg-hero relative">
+    <div className="bg-hero relative pb-4">
       <div className="flex items-center justify-center flex-col mt-[2rem] mb-8 pb-4">
         <h1 className="md:text-5xl text-2xl mt-[3rem] mb-8 logo font-bold text-gray-800 md:w-[8-0%] w-full text-center text-benefits">
           Empowering Farmers with Community-Driven Solutions One Farm at a Time
