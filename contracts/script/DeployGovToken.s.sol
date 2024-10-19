@@ -8,7 +8,7 @@ import {GovToken} from "../src/daoModule/GovToken.sol";
 contract DeployGovToken is Script {
     function run() external returns (GovToken) {
         vm.startBroadcast();
-        GovToken govToken = new GovToken(msg.sender);
+        GovToken govToken = new GovToken();
         vm.stopBroadcast();
         return govToken;
     }

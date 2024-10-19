@@ -25,15 +25,12 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     error PamojaFi__UserHasNoActiveProposal();
     error PamojaFi__PoolNotActive();
     error PamojaFi__DepositAmountTooLow();
-    error PamojaFi__InvalidRandomNumber();
     error PamojaFi__PoolFundsZero();
-    error PamojaFi__FeeTooLow();
     error PamojaFi__InsufficientFunds();
     error PamojaFi__TransferFailed();
-    error PamojaFi__StalePrice();
     error PamojaFi__WithdrawalAmountMustBeGreaterThanZero();
-    error PamojaFi__UserHasNotBeenFunded();
-    error PamojaFi__CallerIsNotOwner();
+    error PamojaFi__PriceMustBeGreaterThanZero();
+    error PamojaFi__UserAlreadyExists();
 
     /// @title PamojaFi
     /// @dev Contract extending ERC4626C with additional asset management and pooling functionalities.
@@ -52,7 +49,10 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     string private s_baseUri;
     AggregatorV3Interface private s_priceFeed;
     Proposal private s_proposal;
+    Proposal[] private s_proposals;
     User private s_user;
+    uint256 public numberOfUsers;
+    User[] public listOfUsers;
 
     /*//////////////////////////////////////////////////////////////
                                  STRUCT
@@ -82,8 +82,9 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
     struct User {
         address userAddress;
-        string propasalsMade;
-        string propasalsVotedOn;
+        string proposalsMade;
+        string proposalsVotedOn;
+        string name;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -95,6 +96,7 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     mapping(uint256 => uint256) private s_totalFundedUSD; // Total amount funded for each proposal
     mapping(address => bool) private s_fundedUsers;
     mapping(address => bool) private userHasFunded;
+    mapping(address => User) public addressToUser;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -127,6 +129,11 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     /// @param amount The amount of funds withdrawn.
     event FundsWithdrawn(address indexed user, uint256 amount);
 
+    /// @dev Event emitted when a new proposal is created.
+    /// @param proposalId The ID of the newly created proposal.
+    /// @param creator The address of the user who created the proposal.
+    event ProposalCreated(uint256 indexed proposalId, address indexed creator);
+
     /// @dev Event emitted when the pool's active status changes.
     /// @param isActive The new status of the pool (true for active, false for inactive).
     event PoolStatusChanged(bool isActive);
@@ -150,7 +157,7 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
                            EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function createPropasal(
+    function createproposal(
         uint256 _proposalId,
         string memory _name,
         uint256 _targetEth,
@@ -163,26 +170,35 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         string memory _shortDescription,
         string memory _additionalDetails
     ) external returns (uint256) {
-        // The function takes in Name, Target in Eth for the propasal, Project link which is a string, project wallet address, imahe url of the project, team information(information about the team), Category of the project, relevant links, Short description and additional details.
-        //It outputs the propasal id which is uint256
-        s_proposal.proposalId = _proposalId;
-        s_proposal.name = _name;
-        s_proposal.targetEth = _targetEth;
-        s_proposal.projectLink = _projectLink;
-        s_proposal.projectWalletAddress = payable(_projectWalletAddress);
-        s_proposal.imageUrl = _imageUrl;
-        s_proposal.teamInformation = _teamInformation;
-        s_proposal.category = _category;
-        s_proposal.relevantLinks = _relevantLinks;
-        s_proposal.shortDescription = _shortDescription;
-        s_proposal.additionalDetails = _additionalDetails;
+        // The function takes in Name, Target in Eth for the proposal, Project link which is a string, project wallet address, imahe url of the project, team information(information about the team), Category of the project, relevant links, Short description and additional details.
+        //It outputs the proposal id which is uint256
+        Proposal memory newProposal = Proposal({
+            proposalId: _proposalId,
+            name: _name,
+            targetEth: _targetEth,
+            projectLink: _projectLink,
+            projectWalletAddress: payable(_projectWalletAddress),
+            imageUrl: _imageUrl,
+            teamInformation: _teamInformation,
+            category: _category,
+            relevantLinks: _relevantLinks,
+            shortDescription: _shortDescription,
+            additionalDetails: _additionalDetails,
+            status: ProposalStatus.Pending,
+            totalFunded: 0,
+            funderCount: 0
+        });
 
-        return s_proposal.proposalId;
+        s_proposals.push(newProposal);
+
+        emit ProposalCreated(_proposalId, msg.sender);
+
+        return newProposal.proposalId;
     }
 
     /// @dev Function to fund multiple users with a single transaction.
     /// @param _proposalId The ID of the proposal to be funded.
-    function fundPropasal(uint256 _proposalId) external payable nonReentrant {
+    function fundproposal(uint256 _proposalId) external payable nonReentrant {
         if (s_proposal.proposalId != _proposalId) {
             revert PamojaFi__InvalidProposalId();
         }
@@ -273,6 +289,22 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         emit FundsWithdrawn(_msgSender(), userBalance); // Emit FundsWithdrawn event
     }
 
+    function addUser(address _userAddress, string memory _name) public {
+        if (bytes(addressToUser[_userAddress].name).length != 0) {
+            revert PamojaFi__UserAlreadyExists();
+        }
+        User memory newUser = User({
+            userAddress: _userAddress,
+            name: _name,
+            proposalsMade: "0",
+            proposalsVotedOn: "0"
+        });
+        listOfUsers.push(newUser);
+
+        addressToUser[_userAddress] = newUser;
+        numberOfUsers++;
+    }
+
     /// @dev Function for the owner to add or update a project proposal.
     /// @param proposalUserAddress The address of the user for the proposal.
     /// @param proposalHash The hash of the proposal.
@@ -353,12 +385,18 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         uint256 _proposalId,
         ProposalStatus _newStatus
     ) external onlyOwner {
-        if (s_proposal.proposalId != _proposalId) {
+        bool proposalFound = false;
+        for (uint256 i = 0; i < s_proposals.length; i++) {
+            if (s_proposals[i].proposalId == _proposalId) {
+                s_proposals[i].status = _newStatus;
+                emit ProposalStatusChanged(_proposalId, _newStatus);
+                proposalFound = true;
+                break;
+            }
+        }
+        if (!proposalFound) {
             revert PamojaFi__InvalidProposalId();
         }
-
-        s_proposal.status = _newStatus;
-        emit ProposalStatusChanged(_proposalId, _newStatus);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -373,7 +411,9 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
     function _getLatestPrice() private view returns (uint256) {
         (, int256 price, , , ) = s_priceFeed.staleCheckLatestRoundData();
-        require(price > 0, "Invalid price");
+        if (price < 0) {
+            revert PamojaFi__PriceMustBeGreaterThanZero();
+        }
         return uint256(price);
     }
 
@@ -430,6 +470,26 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
     function hasUserFunded(address user) external view returns (bool) {
         return userHasFunded[user];
+    }
+
+    /// @dev Function to get the status of a specific proposal by its ID.
+    /// @param proposalId The ID of the proposal.
+    /// @return The status of the proposal.
+    function getProposalStatus(
+        uint256 proposalId
+    ) external view returns (ProposalStatus) {
+        for (uint256 i = 0; i < s_proposals.length; i++) {
+            if (s_proposals[i].proposalId == proposalId) {
+                return s_proposals[i].status;
+            }
+        }
+        revert PamojaFi__InvalidProposalId();
+    }
+
+    /// @dev Function to get all proposals.
+    /// @return An array of all proposals.
+    function getAllProposals() external view returns (Proposal[] memory) {
+        return s_proposals;
     }
 
     /// @dev Function to calculate the scaled amount in Wei for 1 USD.
@@ -493,6 +553,6 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
     /// @notice Allows the contract owner to withdraw contract balance
     function withdrawForTesting() public onlyOwner {
-        payable(_msgSender()).transfer(address(this).balance); // Transfer contract balance to owner
+        payable(_msgSender()).transfer(address(this).balance);
     }
 }

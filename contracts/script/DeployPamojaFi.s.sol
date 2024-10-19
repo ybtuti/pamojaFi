@@ -10,7 +10,7 @@ contract DeployPamojaFi is Script {
         // Start broadcasting transactions
         vm.startBroadcast();
 
-        //Chainlink price feed address for Base network
+        //Chainlink Eth price feed address for Base network
         address priceFeedAddress = 0x4aDC67696bA383F43DD60A9e78F2C97Fbbfc7cb1;
         PamojaFi pamojaFi = new PamojaFi(priceFeedAddress);
 
