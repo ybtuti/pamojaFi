@@ -75,14 +75,6 @@ function Dashboard() {
     createUser();
   }, [walletAddress, isPending]);
 
-  if (loading || isPending) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-ring loading-lg"></span>
-      </div>
-    );
-  }
-
   return (
     <div className="">
       <Navbar />

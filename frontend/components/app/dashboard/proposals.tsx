@@ -1,5 +1,4 @@
 import React from "react";
-import proposals from "../../lib/active-proposals";
 import ActiveCard from "./active-proposal-card";
 import { useReadContract } from "thirdweb/react";
 import { contract } from "../../../src/client";
@@ -34,7 +33,7 @@ function Proposals() {
 
   if (activeProposals.length === 0) {
     return (
-      <div className="flex items-center h-screen logo justify-center text-lg text-center text-neutral-400">
+      <div className="flex items-center h-screen logo justify-center md:items-start text-lg text-center text-neutral-400">
         No active proposals found.
       </div>
     );
