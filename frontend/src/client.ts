@@ -10,7 +10,7 @@ export const client = createThirdwebClient({
 export const contract = getContract({
   client,
   chain: defineChain(84532),
-  address: "0x3a11e829C4FEE14eDD7fac2732746CC3eB11B2b2",
+  address: "0xd33E1F5fab05F87F661A4F8999b04BFBd78Beb43",
 });
 
 export const sdk = new CoinbaseWalletSDK({
