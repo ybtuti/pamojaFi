@@ -1,12 +1,34 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import proposals, { Proposal } from "../../lib/active-proposals";
 import Navbar from "../landing/Navbar";
 import { Button } from "../../ui/button";
+import { useReadContract } from "thirdweb/react";
+import { contract } from "../../../src/client";
 
 function ProposalDetail() {
   const { id } = useParams<{ id: string }>();
-  const proposal = proposals.find((p) => p.id.toString() === id);
+  const { data, isPending } = useReadContract({
+    contract,
+    method:
+      "function getAllProposals() view returns ((uint256 proposalId, string name, uint256 targetEth, string projectLink, address projectWalletAddress, string imageUrl, string teamInformation, string category, string relevantLinks, string shortDescription, string additionalDetails, uint8 status, uint256 totalFunded, uint256 funderCount)[])",
+    params: [],
+  });
+
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
+  if (!data) {
+    return (
+      <div className="flex items-center h-screen logo justify-center text-lg text-center text-neutral-400">
+        No proposal was found.
+      </div>
+    );
+  }
+  const proposal = data.find((p) => p.proposalId.toString() === id);
 
   if (!proposal) {
     return <div>Proposal not found</div>;
@@ -25,7 +47,7 @@ function ProposalDetail() {
       <div className="max-w-7xl md:mx-auto mx-2 my-0 mb-10">
         <div className="my-4">
           <img
-            src={proposal.headerImageLink}
+            src={proposal.imageUrl}
             alt={proposal.name}
             className="w-full h-96 object-fill rounded-lg shadow-lg"
           />
@@ -35,26 +57,27 @@ function ProposalDetail() {
             <h1 className="logo font-bold md:text-2xl text-lg text-benefits flex flex-col dark:text-neutral-100">
               {proposal.name}
               <span className="text-sm title ml-8 text-[#808080] cursor-pointer hover:text-[#0000ee]">
-                By {proposal.authorNamespace}
+                Status {proposal.status}
               </span>
               <a
-                href={`https://sepolia.etherscan.io/search?f=0&q=${proposal.walletAddress}`}
+                href={`https://sepolia.etherscan.io/search?f=0&q=${proposal.projectWalletAddress}`}
                 target="_blank"
                 rel="noreferrer"
                 className="-mt-2"
               >
                 <span className="text-sm title ml-8 text-[#808080] cursor-pointer hover:text-[#0000ee]">
-                  Wallet Address {proposal.walletAddress.substring(0, 12)}...
+                  Wallet Address{" "}
+                  {proposal.projectWalletAddress.substring(0, 12)}...
                 </span>
               </a>
             </h1>
             <div className="flex items-center gap-4 mt-4">
-              <a href={proposal.link} target="_blank" rel="noreferrer">
+              <a href={proposal.projectLink} target="_blank" rel="noreferrer">
                 <Button className="bg-benefits text-hero title">
                   Live Project
                 </Button>
               </a>
-              <a href={proposal.otherLinks[0]} target="_blank" rel="noreferrer">
+              <a href={proposal.relevantLinks} target="_blank" rel="noreferrer">
                 <Button className="bg-benefits text-hero title">
                   Project Socials
                 </Button>
@@ -65,12 +88,12 @@ function ProposalDetail() {
             <p className="text-sm title text-[#808080]">
               Category: {proposal.category}
             </p>
-            {proposal.active ? (
-              <p>Raised {proposal.raised} ETH</p>
+            {proposal.status > 0 ? (
+              <p>Raised {Number(proposal.totalFunded) / 10 ** 18}ETH</p>
             ) : (
-              <p>{proposal.votes} Votes</p>
+              <p>{Number(proposal.funderCount)} Votes</p>
             )}
-            <p>Target {proposal.target} ETH</p>
+            <p>Target {Number(proposal.targetEth) / 10 ** 18}ETH</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -78,13 +101,17 @@ function ProposalDetail() {
             <h1 className="logo text-lg font-semibold text-benefits dark:text-hero">
               Description
             </h1>
-            <p className="text-base leading-relaxed title">{proposal.desc}</p>
+            <p className="text-base leading-relaxed title">
+              {proposal.shortDescription}
+            </p>
           </div>
           <div>
             <h1 className="logo text-lg font-semibold text-benefits dark:text-hero">
               Meet the Team
             </h1>
-            <p className="text-base leading-relaxed title">{proposal.team}</p>
+            <p className="text-base leading-relaxed title">
+              {proposal.teamInformation}
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
@@ -93,11 +120,11 @@ function ProposalDetail() {
               Additional Details
             </h1>
             <p className="text-base leading-relaxed title">
-              {proposal.moreDetails}
+              {proposal.additionalDetails}
             </p>
           </div>
           <div className="mt-4">
-            {proposal.active ? (
+            {proposal.status > 0 ? (
               <div className="flex items-center justify-center flex-col md:flex-row gap-2">
                 <img
                   src="https://images-platform.99static.com/pULAgn-AED8QzzPGS40V0GCDOEk=/0x0:1000x1000/500x500/top/smart/99designs-contests-attachments/130/130378/attachment_130378088"
@@ -122,7 +149,7 @@ function ProposalDetail() {
             )}
           </div>
         </div>
-        {proposal.active ? (
+        {proposal.status > 0 ? (
           <Button
             className="bg-benefits w-full text-hero title mt-8 mb-1"
             onClick={() => handleClick("fund")}
@@ -137,6 +164,9 @@ function ProposalDetail() {
             Vote for this Project
           </Button>
         )}
+        <p className="text-center logo dark:text-neutral-400 text-neutral-600 text-sm pt-4">
+          {Number(proposal.funderCount)} people have already funded this project
+        </p>
       </div>
     </div>
   );

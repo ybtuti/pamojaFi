@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Navbar from "../components/app/landing/Navbar";
 import { DashboardSidebar } from "../components/app/dashboard/sidebar";
 import { prepareContractCall } from "thirdweb";
-import { useSendTransaction } from "thirdweb/react";
+import { useReadContract, useSendTransaction } from "thirdweb/react";
 import { set } from "zod";
 import { contract } from "../src/client";
 import toast from "react-hot-toast";
@@ -13,72 +13,67 @@ function Dashboard() {
   const [isError, setIsError] = React.useState(false);
   const { mutate: sendTransaction } = useSendTransaction();
   const [loading, setLoading] = React.useState(false);
-
-  const generateRandomUsername = (): string => {
-    const randomUsername = Math.random().toString(36).substring(2, 15);
-    const randomNumber = Math.floor(Math.random() * 1000);
-    const username = `${randomUsername}${randomNumber}`;
-    console.log(username);
-    localStorage.setItem("currentUser", `${username}`);
-    setIsUser(true);
-    return username;
+  const fetchAccounts = async () => {
+    try {
+      //@ts-ignore
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      return accounts[0];
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+      return null;
+    }
   };
+  const { data, isPending } = useReadContract({
+    contract,
+    method:
+      "function addressToUser(address) view returns (address userAddress, string proposalsMade, string proposalsVotedOn, string name)",
+    params: [walletAddress || "0x43a9c07acb27a76f2d9f5933f3dcd6bddf9b3ed3"],
+  });
 
-  const fetchAccounts = async (): Promise<string> => {
-    //@ts-ignore
-    const { ethereum } = window;
-    const accounts = await ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    setWalletAddress(accounts[0]);
-    return accounts[0];
+  const generateRandomUsername = () => {
+    return `user_${Math.floor(Math.random() * 10000)}`;
   };
 
   useEffect(() => {
     const createUser = async () => {
-      console.log("function triggered => create user");
       try {
         setLoading(true);
-        const user: string | null = localStorage.getItem("currentUser");
-        console.log(user);
-        if (user) {
-          toast.success("User already exists");
-          setIsUser(true);
-        } else {
-          console.log("creating user");
-          console.log(isUser);
-          setIsUser(false);
-          if (walletAddress) {
-            const username = generateRandomUsername();
-            const address = await fetchAccounts();
-            const transaction = prepareContractCall({
-              contract,
-              method: "function addUser(address _userAddress, string _name)",
-              params: [address, username],
-            });
-            console.log(username, address);
-            await sendTransaction(transaction);
+        if (!isUser) {
+          const username = generateRandomUsername();
+          const address = await fetchAccounts();
+          if (address) {
+            setWalletAddress(address);
+
+            if (data && data[3]?.length > 3) {
+              setIsUser(true);
+              console.log("User already exists");
+              toast.success("User already exists");
+            } else {
+              localStorage.setItem("currentUser", JSON.stringify(data));
+              const transaction = prepareContractCall({
+                contract,
+                method: "function addUser(address _userAddress, string _name)",
+                params: [address, username],
+              });
+              await sendTransaction(transaction);
+            }
             toast.success("User created successfully");
+            setIsUser(true);
           } else {
+            console.error("Address is null");
             setIsError(true);
           }
         }
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        console.log(error);
+        console.error("Error in createUser:", error);
       }
     };
     createUser();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-ring loading-lg"></span>
-      </div>
-    );
-  }
+  }, [walletAddress, isPending]);
 
   return (
     <div className="">

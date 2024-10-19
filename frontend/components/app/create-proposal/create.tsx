@@ -49,6 +49,7 @@ function CreateProposalForm() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [transacting, setTransacting] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -138,6 +139,7 @@ function CreateProposalForm() {
 
   const submitProposal = async (proposal) => {
     setVerifying(false);
+    setLoading(true);
     try {
       setTransacting(true);
       const randomBigInt = getRandomBigInt(0n, 10000n);
@@ -165,8 +167,10 @@ function CreateProposalForm() {
       await sendTransaction(transaction);
       toast.success("Transaction initiated successfully");
       setTransacting(false);
-      // navigate("/dashboard");
+      setLoading(false);
+      navigate("/dashboard");
     } catch (error) {
+      setLoading(false);
       toast.error("Error submitting proposal");
       console.error("Error submitting proposal:", error);
     }
@@ -183,6 +187,14 @@ function CreateProposalForm() {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <h1 className="logo font-bold text-xl">Transacting...</h1>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-ring loading-lg"></span>
       </div>
     );
   }
