@@ -28,7 +28,7 @@ function ActiveCard({ proposal }: { proposal: Proposal }) {
       </div>
       <div className="flex flex-col gap-2 my-2 mb-4">
         <div className="flex items-center justify-between mx-2 mt-2">
-          <h1 className="logo text-[#000] font-semibold text-lg">
+          <h1 className="logo text-[#000] font-semibold text-lg dark:text-neutral-200">
             {proposal.name}
           </h1>
           {proposal.active && (
@@ -38,7 +38,7 @@ function ActiveCard({ proposal }: { proposal: Proposal }) {
             </div>
           )}
         </div>
-        <p className="text-sm text-benefits title leading-relaxed px-2">
+        <p className="text-sm text-benefits title leading-relaxed px-2 dark:text-neutral-300">
           {proposal.desc}
         </p>
       </div>

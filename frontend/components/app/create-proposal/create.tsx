@@ -189,10 +189,10 @@ function CreateProposalForm() {
   return (
     <div className="mx-4 pb-8">
       <div>
-        <h1 className="my-2 logo text-3xl font-semibold text-benefits">
+        <h1 className="my-2 logo text-3xl font-semibold text-benefits dark:text-neutral-100">
           Create Proposal
         </h1>
-        <p className="relaxed title max-w-3xl leading-relaxed my-4 text-sm">
+        <p className="relaxed title max-w-3xl leading-relaxed my-4 text-sm dark:text-neutral-100">
           Please fill in the details of your project. After submission your
           project will be reviewed by the community members and users who
           believe in your idea will exercise their community voting power to
