@@ -34,7 +34,7 @@ contract MyGovernorTest is Test {
     uint256 public constant VOTING_PERIOD = 50400;
 
     function setUp() public {
-        govToken = new GovToken(USER);
+        govToken = new GovToken();
         govToken.mint(USER, INITIAL_SUPPLY);
 
         vm.startPrank(USER);
@@ -64,7 +64,7 @@ contract MyGovernorTest is Test {
     }
 
     function testGovernanceUpdatesBox() public {
-        uint256 valueToStore = 888;
+        //uint256 valueToStore = 888;
         string memory description = "store 1 in Box";
         bytes memory encodedFunctionCall = abi.encodeWithSignature(
             "changeProposalStatus(uint256,uint8)",

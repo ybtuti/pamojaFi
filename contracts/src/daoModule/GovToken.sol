@@ -8,9 +8,12 @@ import {ERC20Permit, IERC20Permit, Nonces} from "@openzeppelin/contracts/token/E
 import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
 contract GovToken is ERC20Votes, ERC20Permit, Ownable {
-    constructor(
-        address initialOwner
-    ) ERC20("GovToken", "GT") Ownable(initialOwner) ERC20Permit("GovToken") {
+    constructor()
+        //address initialOwner
+        ERC20("GovToken", "GT")
+        Ownable(msg.sender)
+        ERC20Permit("GovToken")
+    {
         _mint(msg.sender, 100 * 10 ** decimals());
     }
 
