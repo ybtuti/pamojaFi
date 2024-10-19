@@ -30,7 +30,7 @@ function Hero() {
             </Link>
           </Button>
 
-          <Button className="border-benefits text-benefits border-2 text-lg title w-full md:w-[20%]">
+          <Button className="border-benefits text-benefits border-2 dark:border-transparent dark:text-hero text-lg title w-full md:w-[20%]">
             <Link
               to="/community"
               className="w-full h-full flex items-center justify-center"

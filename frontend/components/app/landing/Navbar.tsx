@@ -28,19 +28,19 @@ interface DisplayBasenameProps {
   address: `0x${string}` | undefined;
 }
 
-export function Basenames({ address }: DisplayBasenameProps) {
-  return (
-    <Identity
-      address={address}
-      chain={base}
-      schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
-    >
-      <Avatar address={address} chain={base} />
-      <Name address={address} chain={base} />
-      <Address />
-    </Identity>
-  );
-}
+// export function Basenames({ address }: DisplayBasenameProps) {
+//   return (
+//     <Identity
+//       address={address}
+//       chain={base}
+//       schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
+//     >
+//       <Avatar address={address} chain={base} />
+//       <Name address={address} chain={base} />
+//       <Address />
+//     </Identity>
+//   );
+// }
 
 function Navbar() {
   const { address } = useAccount();
@@ -50,11 +50,11 @@ function Navbar() {
   return (
     <div className="flex justify-between items-center max-w-[1190px] mx-auto my-0 py-8 px-4">
       <Link to="/" className="mx-2">
-        <h1 className="text-2xl font-extrabold text-benefits logo ">
+        <h1 className="text-2xl font-extrabold text-benefits logo">
           pamojaFI.
         </h1>
       </Link>
-      <div className="hidden md:flex items-center justify-between text-gray-700 title gap-2">
+      <div className="hidden md:flex items-center justify-between title gap-2 dark:text-benefits">
         <Link
           to="/dashboard"
           className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
@@ -145,7 +145,7 @@ function Navbar() {
                 </p>
               </DrawerDescription>
             </DrawerHeader>
-            <div className="flex-col flex text-gray-700 title gap-4 my-4">
+            <div className="flex-col flex text-gray-700 title gap-4 my-4 dark:text-benefits">
               <Link
                 to="/dashboard"
                 className="text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 flex gap-2"
