@@ -116,7 +116,7 @@ contract MyGovernorTest is Test {
 
         //console.logString("proposal Status: ", box.getProposalStatus());
         assert(
-            box.getProposalStatus() ==
+            box.getProposalStatus(1) ==
                 PamojaFi.ProposalStatus(uint8(ProposalStatus.Active))
         );
     }
