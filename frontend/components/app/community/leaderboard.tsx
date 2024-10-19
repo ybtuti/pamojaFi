@@ -12,10 +12,10 @@ function LeaderBoard() {
   return (
     <div>
       <div className="flex flex-col gap-2 mx-2 mb-4">
-        <h1 className="logo text-xl font-semibold lg:text-2xl">
+        <h1 className="logo text-xl font-semibold lg:text-2xl dark:text-neutral-200">
           Community Leader board
         </h1>
-        <p className="title text-benefits leading-relaxed w-full md:max-w-[40%]">
+        <p className="title text-benefits leading-relaxed w-full md:max-w-[40%] dark:text-hero">
           View the top projects in the community based on their farming
           activities impact as voted by you.
         </p>
@@ -64,7 +64,7 @@ function LeaderBoard() {
         </div>
       </div>
       <div>
-        <h1 className="logo text-xl text-center text-benefits mt-8">
+        <h1 className="logo text-xl text-center text-benefits mt-8 dark:text-neutral-100">
           Nothing here yet.
         </h1>
       </div>

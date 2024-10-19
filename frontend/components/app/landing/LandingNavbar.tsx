@@ -50,20 +50,14 @@ function Navbar({ landing }: { landing?: boolean }) {
   return (
     <div className="flex justify-between items-center max-w-[1190px] mx-auto my-0 py-8 px-4">
       <Link to="/" className="mx-2">
-        <h1
-          className={`text-2xl font-extrabold text-benefits logo ${
-            landing ? "dark:text-benefits" : "dark:text-hero"
-          }`}
-        >
+        <h1 className={`text-2xl font-extrabold text-benefits logo`}>
           pamojaFI.
         </h1>
       </Link>
       <div className="hidden md:flex items-center justify-between title gap-2 dark:text-benefits">
         <Link
           to="/dashboard"
-          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
-            !landing ? "dark:text-hero" : "dark:text-benefits"
-          } ${
+          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150} ${
             currentPath === "/dashboard"
               ? "border-b-[2px]  border-benefits dark:border-hero"
               : ""
@@ -74,9 +68,7 @@ function Navbar({ landing }: { landing?: boolean }) {
 
         <Link
           to="/create"
-          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
-            !landing ? "dark:text-hero" : "dark:text-benefits"
-          } ${
+          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 $ ${
             currentPath === "/create" ? "border-b-[2px]  border-benefits" : ""
           }`}
         >
@@ -85,9 +77,7 @@ function Navbar({ landing }: { landing?: boolean }) {
 
         <Link
           to="/pending"
-          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
-            !landing ? "dark:text-hero" : "dark:text-benefits"
-          } ${
+          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150  ${
             currentPath === "/pending" ? "border-b-[2px]  border-benefits" : ""
           }`}
         >
@@ -96,10 +86,7 @@ function Navbar({ landing }: { landing?: boolean }) {
 
         <Link
           to="/community"
-          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 ${
-            !landing ? "dark:text-hero" : "dark:text-benefits"
-          } ${
-            currentPath === "/community"
+          className={`text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 currentPath === "/community"
               ? "border-b-[2px]  border-benefits"
               : ""
           }`}
@@ -137,27 +124,27 @@ function Navbar({ landing }: { landing?: boolean }) {
           </div>
         )} */}
       </div>
-      <div className="flex md:hidden">
+      <div className="flex md:hidden mx-4">
         <Drawer>
           <DrawerTrigger>
             <IoMenu className="text-xl" size={44} />
           </DrawerTrigger>
-          <DrawerContent className="bg-hero dark:bg-[#1D232A]">
+          <DrawerContent className="bg-hero">
             <DrawerHeader>
               <DrawerTitle>
                 <div className="mx-2">
-                  <h1 className="text-2xl font-extrabold text-gray-700 logo ">
+                  <h1 className="text-2xl font-extrabold text-neutral-700 logo ">
                     pamojaFI.
                   </h1>
                 </div>
               </DrawerTitle>
               <DrawerDescription>
-                <p className="text-sm title text-gray-500">
+                <p className="text-sm title text-neutral-500">
                   Empowering Africa, one farm at a time
                 </p>
               </DrawerDescription>
             </DrawerHeader>
-            <div className="flex-col flex text-gray-700 title gap-4 my-4">
+            <div className="flex-col flex text-gray-700 title gap-4 my-4 dark:text-benefits">
               <Link
                 to="/dashboard"
                 className="text-lg mx-2 hover:border-b-[2px] py-1 hover:scale-95 ease-in-out duration-150 flex gap-2"
@@ -196,7 +183,7 @@ function Navbar({ landing }: { landing?: boolean }) {
                   <ConnectButton client={client} />
                 </div>
                 <DrawerClose>
-                  <Button variant="outline" className="py-4">
+                  <Button variant="outline" className="py-4 text-neutral-700">
                     Close
                   </Button>
                 </DrawerClose>

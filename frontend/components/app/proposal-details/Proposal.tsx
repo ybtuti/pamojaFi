@@ -75,13 +75,13 @@ function ProposalDetail() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h1 className="logo text-lg font-semibold text-benefits">
+            <h1 className="logo text-lg font-semibold text-benefits dark:text-hero">
               Description
             </h1>
             <p className="text-base leading-relaxed title">{proposal.desc}</p>
           </div>
           <div>
-            <h1 className="logo text-lg font-semibold text-benefits">
+            <h1 className="logo text-lg font-semibold text-benefits dark:text-hero">
               Meet the Team
             </h1>
             <p className="text-base leading-relaxed title">{proposal.team}</p>
@@ -89,7 +89,7 @@ function ProposalDetail() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
           <div>
-            <h1 className="logo text-lg font-semibold text-benefits">
+            <h1 className="logo text-lg font-semibold text-benefits dark:text-hero">
               Additional Details
             </h1>
             <p className="text-base leading-relaxed title">
