@@ -1,5 +1,6 @@
 import React from "react";
 import { Proposal } from "../../lib/active-proposals";
+//@ts-ignore
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useNavigate } from "react-router-dom";
 import {
@@ -7,11 +8,27 @@ import {
   IconWallet,
   IconCircleCheck,
 } from "@tabler/icons-react";
+export interface IProposal {
+  additionalDetails: string;
+  category: string;
+  funderCount: bigint;
+  imageUrl: string;
+  name: string;
+  projectLink: string;
+  projectWalletAddress: string;
+  proposalId: bigint;
+  relevantLinks: string;
+  shortDescription: string;
+  status: number;
+  targetEth: bigint;
+  teamInformation: string;
+  totalFunded: bigint;
+}
 
-function ActiveCard({ proposal }: { proposal: Proposal }) {
+function ActiveCard({ proposal }: { proposal: IProposal }) {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/proposals/${proposal.id}`);
+    navigate(`/proposals/${Number(proposal.proposalId)}`);
   };
 
   return (
@@ -21,7 +38,7 @@ function ActiveCard({ proposal }: { proposal: Proposal }) {
     >
       <div>
         <LazyLoadImage
-          src={proposal.headerImageLink}
+          src={proposal.imageUrl}
           alt={proposal.name}
           className="w-full h-48 object-cover rounded-lg"
         />
@@ -31,28 +48,28 @@ function ActiveCard({ proposal }: { proposal: Proposal }) {
           <h1 className="logo text-[#000] font-semibold text-lg dark:text-neutral-200">
             {proposal.name}
           </h1>
-          {proposal.active && (
+          {proposal.status > 0 && (
             <div className="flex gap-1">
-              <p className="text-sm logo">{proposal.votes}</p>
+              <p className="text-sm logo">{Number(proposal.funderCount)}</p>
               <IconHeartFilled size={20} stroke={1.5} color="#FF0000" />
             </div>
           )}
         </div>
         <p className="text-sm text-benefits title leading-relaxed px-2 dark:text-neutral-300">
-          {proposal.desc}
+          {proposal.shortDescription}
         </p>
       </div>
-      {proposal.active && (
+      {proposal.status > 0 && (
         <div className="w-full border-t-benefits border-b-benefits border-[1px] border-r-0 border-l-0 py-4 flex justify-between items-center">
           <div className="flex px-0 gap-1 items-center">
             <IconWallet size={20} stroke={1.5} color="#FF0000" />
             <p className="text-sm logo">
-              {proposal.walletAddress.substring(0, 12)}...
+              {proposal.projectWalletAddress.substring(0, 12)}...
             </p>
           </div>
           <div className="flex px-0 items-center">
             <p className="text-xs logo text-center">
-              {proposal.authorNamespace}
+              {proposal.category.toUpperCase()}
             </p>
             <IconCircleCheck size={15} stroke={1.5} color="#FF0000" />
           </div>
@@ -62,10 +79,7 @@ function ActiveCard({ proposal }: { proposal: Proposal }) {
         <div className="flex-col px-0 gap-1 items-center">
           <h1 className="text-sm font-semibold logo">TARGET</h1>
           <p className="text-sm title">
-            {proposal.target.toLocaleString("en-US", {
-              style: "currency",
-              currency: "KES",
-            })}
+            {Number(proposal.targetEth) / 10 ** 18} ETH
           </p>
         </div>
         <div className="flex-col px-0 items-center">

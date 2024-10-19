@@ -137,6 +137,9 @@ function ProposalDetail() {
             Vote for this Project
           </Button>
         )}
+        <p className="text-center logo dark:text-neutral-400 text-neutral-600 text-sm pt-4">
+          12 people have already funded this project
+        </p>
       </div>
     </div>
   );
