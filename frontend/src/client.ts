@@ -10,12 +10,18 @@ export const client = createThirdwebClient({
 export const contract = getContract({
   client,
   chain: defineChain(84532),
-  address: "0xd33E1F5fab05F87F661A4F8999b04BFBd78Beb43",
+  address: "0xDA5BE4B4E653EeBEecbb8F2B6a5eD282F9DaFcC0",
+});
+
+export const governanceContract = getContract({
+  client,
+  chain: defineChain(84532),
+  address: "0x52B69A18BE99c9848e412B3529cB23938FA0DE67",
 });
 
 export const sdk = new CoinbaseWalletSDK({
   appName: "PamojaFI",
-  appChainIds: [8453, 84532, 11155111],
+  appChainIds: [84532],
   appLogoUrl:
     "https://raw.githubusercontent.com/ybtuti/pamojaFi/refs/heads/main/frontend/public/logo.jpg",
 });
