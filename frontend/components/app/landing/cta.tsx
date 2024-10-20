@@ -1,6 +1,6 @@
 import React from "react";
+//@ts-ignore
 import { LazyLoadImage } from "react-lazy-load-image-component";
-
 function CTA() {
   return (
     <div>
@@ -33,14 +33,14 @@ function CTA() {
             <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
               <LazyLoadImage
                 alt=""
-                src="https://scholarmedia.africa/wp-content/uploads/2023/07/A-happy-woman-holding-corn-cob-at-a-maize-farm.-PHOTO-Zafaran-Photography-Via-TechCrunch.jpg"
-                className="h-40 w-full object-cover sm:h-56 md:h-full"
+                src="https://www.farmafrica.org/wp-content/uploads/2024/09/RS15686_IMG_7111_lpr.jpg"
+                className="h-40 w-full object-cover sm:h-56 md:h-full rounded-sm"
               />
 
               <LazyLoadImage
                 alt=""
                 src="https://img.freepik.com/premium-photo/happy-positive-african-farmer-his-banana-garden_521733-12829.jpg"
-                className="h-40 w-full object-cover sm:h-56 md:h-full"
+                className="h-40 w-full object-cover sm:h-56 md:h-full rounded-sm"
               />
             </div>
           </div>

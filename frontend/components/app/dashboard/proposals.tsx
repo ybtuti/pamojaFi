@@ -28,7 +28,7 @@ function Proposals() {
   }
 
   const activeProposals: IProposal[] = data.filter(
-    (proposal: IProposal) => proposal.status === 1
+    (proposal: IProposal) => proposal.status >= 1
   );
 
   if (activeProposals.length === 0) {
