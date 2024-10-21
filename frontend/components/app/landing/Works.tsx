@@ -1,5 +1,5 @@
+//@ts-ignore
 import { LazyLoadImage } from "react-lazy-load-image-component";
-
 import React from "react";
 import { Timeline } from "../../../components/ui/timeline";
 

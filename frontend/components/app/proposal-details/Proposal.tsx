@@ -4,9 +4,16 @@ import Navbar from "../landing/Navbar";
 import { Button } from "../../ui/button";
 import { useReadContract } from "thirdweb/react";
 import { contract } from "../../../src/client";
+import { prepareContractCall } from "thirdweb";
+import { useSendTransaction } from "thirdweb/react";
+import { toast } from "react-hot-toast";
 
 function ProposalDetail() {
   const { id } = useParams<{ id: string }>();
+  const [loading, setLoading] = React.useState(false);
+  const proposalID = Number(id);
+
+  const { mutate: sendTransaction } = useSendTransaction();
   const { data, isPending } = useReadContract({
     contract,
     method:
@@ -14,7 +21,62 @@ function ProposalDetail() {
     params: [],
   });
 
+  const vote = () => {
+    setLoading(true);
+    try {
+      if (id) {
+        const transaction = prepareContractCall({
+          contract,
+          method: "function supportP(uint256 _proposalId)",
+          params: [BigInt(proposalID)],
+        });
+        sendTransaction(transaction);
+        toast.success("Voted successfully");
+        setLoading(false);
+      } else {
+        console.log("No proposal id found");
+        toast.error("No proposal id found");
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  const fund = async () => {
+    console.log("We're funding");
+    const amount = BigInt(0.001 * 10 ** 18);
+    const amount2 = BigInt(0.002 * 10 ** 18);
+
+    setLoading(true);
+    try {
+      if (id) {
+        console.log("We're funding now tx");
+        const transaction = prepareContractCall({
+          contract,
+          method:
+            "function fundproposal(uint256 _proposalId, uint256 amountInWei) payable",
+          params: [BigInt(proposalID), amount2],
+          value: amount2,
+        });
+        await sendTransaction(transaction);
+      }
+      toast.success("Funded successfully");
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   if (isPending) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="loading loading-ring loading-lg"></span>
@@ -35,8 +97,10 @@ function ProposalDetail() {
   }
   const handleClick = (action: string) => {
     if (action === "fund") {
+      fund();
       console.log("Funding project");
     } else {
+      vote();
       console.log("Voting for project");
     }
   };
@@ -60,7 +124,7 @@ function ProposalDetail() {
                 Status {proposal.status}
               </span>
               <a
-                href={`https://sepolia.etherscan.io/search?f=0&q=${proposal.projectWalletAddress}`}
+                href={`https://sepolia.basescan.org/address/${proposal.projectWalletAddress}`}
                 target="_blank"
                 rel="noreferrer"
                 className="-mt-2"
