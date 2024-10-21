@@ -33,8 +33,6 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     error PamojaFi__UserAlreadyExists();
     error PamojaFi__incorrectEtherAmountsent();
 
-    /// @title PamojaFi
-    /// @dev Contract extending ERC4626C with additional asset management and pooling functionalities.
     /*//////////////////////////////////////////////////////////////
                             USING DIRECTIVE
     //////////////////////////////////////////////////////////////*/
@@ -138,6 +136,10 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     /// @dev Event emitted when the pool's active status changes.
     /// @param isActive The new status of the pool (true for active, false for inactive).
     event PoolStatusChanged(bool isActive);
+
+    /// @dev Event emitted when the status of a proposal changes.
+    /// @param proposalId The ID of the proposal whose status changed.
+    /// @param newStatus The new status of the proposal.
     event ProposalStatusChanged(uint256 proposalId, ProposalStatus newStatus);
 
     /*//////////////////////////////////////////////////////////////
@@ -204,10 +206,6 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         uint256 _proposalId,
         uint256 amountInWei
     ) external payable nonReentrant {
-        // Convert the amount from Ether to Wei
-        //uint256 amountInWei = amount * 1 ether;
-
-        // Ensure the user has sent the correct amount of Ether
         if (msg.value != amountInWei) {
             revert PamojaFi__incorrectEtherAmountsent();
         }
@@ -218,13 +216,10 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
             if (s_proposals[i].proposalId == _proposalId) {
                 proposalFound = true;
 
-                // Update the total funded amount for the proposal
                 s_proposals[i].totalFunded += amountInWei;
 
-                // Update the count of funders
                 s_proposals[i].funderCount += 1;
 
-                // Check if the proposal has reached its funding target
                 if (s_proposals[i].totalFunded >= s_proposals[i].targetEth) {
                     s_proposals[i].status = ProposalStatus.Closed;
                     // Withdraw funds to the project wallet address
@@ -254,29 +249,22 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         address receiver,
         address owner
     ) public virtual override returns (uint256 id) {
-        // Check if the requested withdrawal amount is greater than zero
         if (assets == 0) {
             revert PamojaFi__WithdrawalAmountMustBeGreaterThanZero();
         }
 
-        // Check if the owner has sufficient balance
         uint256 userBalance = s_userBalances[owner];
         if (userBalance <= assets) {
             revert PamojaFi__InsufficientFunds();
         }
-
-        // Update the user's balance
         s_userBalances[owner] -= assets;
 
-        // Transfer the assets to the receiver
         (bool success, ) = receiver.call{value: assets}("");
         if (!success) {
             revert PamojaFi__TransferFailed();
         }
-        // Emit an event for the withdrawal
         emit FundsWithdrawn(owner, assets);
 
-        // Return the token ID associated with the withdrawal
         id = deposit(0, owner);
     }
 
@@ -304,16 +292,14 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     /// @dev Function for users to withdraw their funds.
     function withdrawFunds() public nonReentrant {
         uint256 userBalance = s_userBalances[_msgSender()];
-        if (userBalance == 0) revert PamojaFi__InsufficientFunds(); // Revert if insufficient funds
+        if (userBalance == 0) revert PamojaFi__InsufficientFunds();
 
-        s_userBalances[_msgSender()] = 0; // Reset user funds
+        s_userBalances[_msgSender()] = 0;
 
-        /// Can add a platform fee in the future, but for now, it's free to use!
+        (bool success, ) = _msgSender().call{value: userBalance}("");
+        if (!success) revert PamojaFi__TransferFailed();
 
-        (bool success, ) = _msgSender().call{value: userBalance}(""); // Transfer funds to user
-        if (!success) revert PamojaFi__TransferFailed(); // Revert if transfer fails
-
-        emit FundsWithdrawn(_msgSender(), userBalance); // Emit FundsWithdrawn event
+        emit FundsWithdrawn(_msgSender(), userBalance);
     }
 
     function addUser(address _userAddress, string memory _name) public {
@@ -470,7 +456,9 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         address payable projectWallet,
         uint256 amount
     ) internal {
-        require(amount > 0, "Amount must be greater than zero");
+        if (amount < 0) {
+            revert PamojaFi__WithdrawalAmountMustBeGreaterThanZero();
+        }
         projectWallet.transfer(amount);
     }
 
@@ -545,13 +533,11 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     /// @dev Function to calculate the scaled amount in Wei for 1 USD.
     /// @return oneDollarInWei The equivalent of 1 USD in Wei.
     function getScaledAmount() public view returns (uint256 oneDollarInWei) {
-        (, int256 price, , , ) = s_priceFeed.staleCheckLatestRoundData(); // Use Chainlink price feed
-        require(price > 0, "Invalid price");
-
-        // Convert the price to 18 decimal places (Chainlink typically uses 8 decimals for ETH/USD)
+        (, int256 price, , , ) = s_priceFeed.staleCheckLatestRoundData();
+        if (price < 0) {
+            revert PamojaFi__PriceMustBeGreaterThanZero();
+        }
         uint256 ethPrice18Decimals = uint256(price) * 10 ** 10;
-
-        // Calculate how much Wei is equivalent to 1 USD
         oneDollarInWei = (1e18 * 1e18) / ethPrice18Decimals;
         return oneDollarInWei;
     }
