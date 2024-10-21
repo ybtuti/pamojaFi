@@ -3,6 +3,7 @@
 # 🌱 **PamojaFi**  
 ### Empowering Farmers with Community-Driven Decisions and Resource Allocation 🌾
 
+![landing](./screenshots/landing.png)
 ---
 
 **PamojaFi** is a decentralized platform designed to provide farmers with community-driven governance, resource allocation, and funding. Using DAO-like features, PamojaFi enables transparent and fair decision-making, ensuring equitable distribution of resources through the power of blockchain technology.
@@ -93,9 +94,12 @@
 
 ## 🔗 **Smart Contract Links**
 
-- **Governance Contract**: [Link to the smart contract]
-- **Funding Pool Contract**: [Link to the smart contract]
-- **Token Contract**: [Link to the smart contract]
+Explore the key smart contracts that power the PamojaFi platform:
+
+- **PamojaFi Contract**: [View Contract](https://sepolia.basescan.org/address/0xda5be4b4e653eebeecbb8f2b6a5ed282f9dafcc0) - The main contract governing the PamojaFi ecosystem.
+- **Governance Contract**: [Governance Token](https://sepolia.basescan.org/address/0xe26ff48b1a6f3c6ccab1b209424bf4c9cbfa44d6) - Manages the governance tokens used for voting and decision-making.
+- **TimeLock Contract**: [TimeLock](https://sepolia.basescan.org/address/0x7e5b345773577aaf03fe7269ca1eaff85f9661b5) - Ensures that funds are locked for a specified period before being released.
+- **Governor Contract**: [Governor](https://sepolia.basescan.org/address/0x52b69a18be99c9848e412b3529cb23938fa0de67) - Facilitates the governance process, allowing users to propose and vote on changes.
 
 ---
 
