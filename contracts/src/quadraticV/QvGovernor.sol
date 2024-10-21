@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 
-contract MyGovernor is
+contract QvGovernor is
     Governor,
     GovernorSettings,
     GovernorCountingSimple,
