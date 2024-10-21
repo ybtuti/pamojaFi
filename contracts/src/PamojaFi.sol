@@ -31,6 +31,7 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     error PamojaFi__WithdrawalAmountMustBeGreaterThanZero();
     error PamojaFi__PriceMustBeGreaterThanZero();
     error PamojaFi__UserAlreadyExists();
+    error PamojaFi__incorrectEtherAmountsent();
 
     /// @title PamojaFi
     /// @dev Contract extending ERC4626C with additional asset management and pooling functionalities.
@@ -93,7 +94,7 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
 
     mapping(address => uint256) private s_userBalances;
     mapping(address => bytes32) private s_proposalHashes;
-    mapping(uint256 => uint256) private s_totalFundedUSD; // Total amount funded for each proposal
+    mapping(uint256 => uint256) private s_totalFundedUSD;
     mapping(address => bool) private s_fundedUsers;
     mapping(address => bool) private userHasFunded;
     mapping(address => User) public addressToUser;
@@ -196,25 +197,51 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         return newProposal.proposalId;
     }
 
-    /// @dev Function to fund multiple users with a single transaction.
+    /// @dev Function to fund a proposal with a specified amount in Ether.
     /// @param _proposalId The ID of the proposal to be funded.
-    function fundproposal(uint256 _proposalId) external payable nonReentrant {
-        if (s_proposal.proposalId != _proposalId) {
+    /// @param amountInWei The amount in Ether to fund the proposal.
+    function fundproposal(
+        uint256 _proposalId,
+        uint256 amountInWei
+    ) external payable nonReentrant {
+        // Convert the amount from Ether to Wei
+        //uint256 amountInWei = amount * 1 ether;
+
+        // Ensure the user has sent the correct amount of Ether
+        if (msg.value != amountInWei) {
+            revert PamojaFi__incorrectEtherAmountsent();
+        }
+
+        bool proposalFound = false;
+
+        for (uint256 i = 0; i < s_proposals.length; i++) {
+            if (s_proposals[i].proposalId == _proposalId) {
+                proposalFound = true;
+
+                // Update the total funded amount for the proposal
+                s_proposals[i].totalFunded += amountInWei;
+
+                // Update the count of funders
+                s_proposals[i].funderCount += 1;
+
+                // Check if the proposal has reached its funding target
+                if (s_proposals[i].totalFunded >= s_proposals[i].targetEth) {
+                    s_proposals[i].status = ProposalStatus.Closed;
+                    // Withdraw funds to the project wallet address
+                    // _withdrawFunds(
+                    //     s_proposals[i].projectWalletAddress,
+                    //     s_proposals[i].totalFunded
+                    // );
+                }
+
+                emit PoolFunded(_msgSender(), amountInWei, _proposalId);
+                break;
+            }
+        }
+
+        if (!proposalFound) {
             revert PamojaFi__InvalidProposalId();
         }
-
-        // Update the total funded amount for the proposal
-        s_proposal.totalFunded += msg.value;
-
-        // Update the count of funders
-        s_proposal.funderCount += 1;
-
-        if (s_proposal.totalFunded >= s_proposal.targetEth) {
-            s_proposal.status = ProposalStatus.Closed;
-            _withdrawFunds();
-        }
-
-        emit PoolFunded(_msgSender(), msg.value, _proposalId);
     }
 
     /// @dev Allows users who have been funded to withdraw their funds.
@@ -339,6 +366,25 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
         emit PoolEnded(s_poolBalance, depositPerUser);
     }
 
+    function supportP(uint256 _proposalId) external {
+        // Find the proposal by its ID
+        for (uint256 i = 0; i < s_proposals.length; i++) {
+            if (s_proposals[i].proposalId == _proposalId) {
+                if (s_proposals[i].status == ProposalStatus.Pending) {
+                    s_proposals[i].status = ProposalStatus.Active;
+                    s_proposals[i].funderCount += 1;
+                    // Emit an event for the status change
+                    emit ProposalStatusChanged(
+                        _proposalId,
+                        ProposalStatus.Active
+                    );
+                }
+                return;
+            }
+        }
+        revert PamojaFi__InvalidProposalId();
+    }
+
     /// @dev Function for the owner to set the pool active or inactive.
     /// @param _poolActive Boolean indicating if the pool should be active or inactive.
     function setPoolActive(bool _poolActive) external onlyOwner {
@@ -418,10 +464,14 @@ contract PamojaFi is ERC4626C, Ownable, ReentrancyGuard {
     }
 
     /// @dev Internal function to withdraw funds to the project wallet address.
-    function _withdrawFunds() internal {
-        uint256 amountToWithdraw = s_proposal.totalFunded;
-        s_proposal.projectWalletAddress.transfer(amountToWithdraw); // Transfer funds to the project wallet
-        s_proposal.totalFunded = 0; // Reset total funded after withdrawal
+    /// @param projectWallet The address of the project's wallet.
+    /// @param amount The amount to withdraw.
+    function _withdrawFunds(
+        address payable projectWallet,
+        uint256 amount
+    ) internal {
+        require(amount > 0, "Amount must be greater than zero");
+        projectWallet.transfer(amount);
     }
 
     /// @dev Function to mark a user as having funded a proposal.
